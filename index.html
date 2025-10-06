@@ -1,468 +1,167 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="nl">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Cookie Clicker (Tim) — Online Leaderboard</title>
+<meta charset="UTF-8">
+<title>🍪 Cookie Clicker Tim</title>
 <style>
-  /* inline styles per jouw verzoek (geen external style.css) */
-  :root{--bg:#071225;--card:#0b1220;--accent:#f59e0b;--muted:#9aa4b2}
-  *{box-sizing:border-box;font-family:Inter,system-ui,Segoe UI,Roboto,Arial}
-  body{margin:0;background:linear-gradient(180deg,#071225 0%, #071935 100%);color:#e6eef8}
-  .wrap{max-width:1100px;margin:18px auto;padding:18px}
-  header{display:flex;align-items:center;gap:12px}
-  h1{margin:0;font-size:20px}
-  .main{display:grid;grid-template-columns:1fr 380px;gap:16px;margin-top:14px}
-  .card{background:var(--card);padding:14px;border-radius:10px;box-shadow:0 6px 18px rgba(2,6,23,.6)}
-  #cookieBtn{width:220px;height:220px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;border:6px solid rgba(255,255,255,.05);cursor:pointer;background:radial-gradient(circle at 30% 25%, #fff3c3, #ffd36b 30%, #e89b22 60%, #b46a00 100%)}
-  .stats{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
-  .stat{background:rgba(255,255,255,.03);padding:8px 10px;border-radius:8px;font-size:13px}
-  .upgrades{margin-top:10px;display:grid;grid-template-columns:1fr;gap:8px;max-height:500px;overflow:auto}
-  .upgrade{display:flex;gap:10px;align-items:center;padding:8px;border-radius:8px;background:rgba(255,255,255,.02)}
-  .upgrade img{width:72px;height:72px;border-radius:8px;object-fit:cover}
-  .u-info{flex:1}
-  .u-title{font-weight:700}
-  .u-desc{font-size:13px;color:var(--muted)}
-  .u-buy{display:flex;flex-direction:column;gap:6px;align-items:flex-end}
-  button{background:var(--accent);color:#071225;border:none;padding:8px 10px;border-radius:8px;cursor:pointer;font-weight:700}
-  .btn-muted{background:transparent;border:1px solid rgba(255,255,255,.04);color:var(--muted)}
-  .small{padding:6px 8px;font-size:13px}
-  input[type="text"]{padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,.04);background:transparent;color:inherit;width:100%}
-  .leader{display:flex;flex-direction:column;gap:8px}
-  .leader-row{display:flex;justify-content:space-between;padding:8px;border-radius:6px;background:rgba(255,255,255,.02)}
-  .muted{color:var(--muted);}
-  @media(max-width:980px){.main{grid-template-columns:1fr}}
+  body {
+    background: #222;
+    color: white;
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+  }
+  h1 { font-size: 2.5em; margin-top: 20px; }
+  #cookie {
+    width: 200px;
+    cursor: pointer;
+    transition: transform 0.1s;
+  }
+  #cookie:active {
+    transform: scale(0.9);
+  }
+  #stats {
+    margin-top: 10px;
+    font-size: 1.2em;
+  }
+  #upgrades {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+  }
+  .upgrade {
+    background: #333;
+    padding: 10px;
+    border-radius: 10px;
+    width: 120px;
+    cursor: pointer;
+  }
+  .upgrade img {
+    width: 80px;
+  }
+  #leaderboard {
+    margin-top: 30px;
+    background: #111;
+    padding: 10px;
+    border-radius: 10px;
+    width: 300px;
+    margin-left: auto;
+    margin-right: auto;
+  }
 </style>
 </head>
 <body>
-  <div class="wrap">
-    <header>
-      <img src="public/images/png1.png" alt="logo" style="width:56px;height:56px;border-radius:10px;object-fit:cover">
-      <div>
-        <h1>Cookie Clicker (Tim) — Online Leaderboard</h1>
-        <div class="muted" style="font-size:13px">Zorg dat images/png1.png … png20.png in map <strong>public/images</strong> staan.</div>
-      </div>
-      <div style="margin-left:auto;display:flex;gap:8px;align-items:center">
-        <input id="username" type="text" placeholder="Je naam (max 24 tekens)" maxlength="24" style="width:200px">
-        <button id="btnRegister" class="small">Registreer / Login</button>
-      </div>
-    </header>
 
-    <div class="main" style="margin-top:14px">
-      <section class="card">
-        <div style="display:flex;flex-direction:column;align-items:center">
-          <div id="cookieBtn" title="Klik!">🍪 Klik mij</div>
-          <div id="cookieCount" style="margin-top:12px;font-weight:700">0 koekjes</div>
+<h1>🍪 Cookie Clicker Tim</h1>
+<p>Welkom! Vul je naam in om te beginnen:</p>
+<input id="nameInput" placeholder="Jouw naam">
+<button id="startBtn">Start</button>
 
-          <div class="stats" style="margin-top:12px">
-            <div class="stat">Per klik: <span id="perClick">1</span></div>
-            <div class="stat">Per seconde: <span id="perSec">0</span></div>
-            <div class="stat">Upgrades gekocht: <span id="bought">0</span></div>
-          </div>
-
-          <div style="width:100%;margin-top:12px">
-            <label class="muted">Autoklik snelheid (ms)</label>
-            <input id="autoSpeed" type="range" min="100" max="2000" value="1000" style="width:100%">
-          </div>
-
-          <div style="display:flex;gap:8px;margin-top:12px;width:100%">
-            <button id="saveLocal" class="btn-muted small">Sla lokaal op</button>
-            <button id="saveServer" class="small">Sla naar server</button>
-            <button id="loadServer" class="btn-muted small">Laad van server</button>
-            <button id="reset" class="btn-muted small">Reset lokaal</button>
-          </div>
-
-          <div style="margin-top:12px;width:100%">
-            <input id="search" type="text" placeholder="Zoek upgrades..." />
-          </div>
-        </div>
-
-        <div class="upgrades" id="upgradesList"></div>
-      </section>
-
-      <aside class="card">
-        <div style="display:flex;justify-content:space-between;align-items:center">
-          <div>
-            <strong>Leaderboard</strong>
-            <div class="muted" style="font-size:13px">Top 10 spelers (live)</div>
-          </div>
-          <div style="text-align:right">
-            <div class="muted" style="font-size:13px">Jij: <span id="playerName">—</span></div>
-            <div class="muted" style="font-size:13px">Score: <span id="playerScore">—</span></div>
-          </div>
-        </div>
-
-        <div id="leaderboard" style="margin-top:12px" class="leader"></div>
-
-        <div style="margin-top:14px">
-          <strong>Account</strong>
-          <div style="margin-top:8px" class="muted">Na registratie wordt er een unieke key opgeslagen in localStorage om je progress te onthouden.</div>
-          <div style="display:flex;gap:8px;margin-top:8px">
-            <button id="btnLogout" class="btn-muted small">Uitloggen</button>
-            <button id="btnDelete" class="btn-muted small">Verwijder account (server)</button>
-          </div>
-        </div>
-
-        <div style="margin-top:12px">
-          <strong>Debug</strong>
-          <div class="muted" style="font-size:13px">Gebruik 'U' toets om +100k te krijgen (test).</div>
-        </div>
-      </aside>
-    </div>
+<div id="game" style="display:none;">
+  <img id="cookie" src="images/png1.png" alt="cookie">
+  <div id="stats">
+    <p>Cookies: <span id="cookieCount">0</span></p>
   </div>
 
+  <h2>Upgrades</h2>
+  <div id="upgrades"></div>
+
+  <div id="leaderboard">
+    <h3>🏆 Leaderboard (lokaal)</h3>
+    <ul id="leaderboardList"></ul>
+  </div>
+</div>
+
 <script>
-/*
-  Frontend logic:
-  - Local state + upgrades
-  - Register/login -> server returns player_id / api_key (we store it in localStorage)
-  - /api/save -> send cookies + upgrades to server (upsert)
-  - /api/leaderboard -> fetch top 10 and render
-  - /api/player/:id -> load personal save
-*/
+let playerName = "";
+let cookies = 0;
+let cps = 0;
+const cookieEl = document.getElementById('cookie');
+const cookieCountEl = document.getElementById('cookieCount');
+const upgradesEl = document.getElementById('upgrades');
+const leaderboardList = document.getElementById('leaderboardList');
 
-const API_BASE = location.origin + '/api'; // assume same origin; if server on another host, update URL
+document.getElementById('startBtn').onclick = () => {
+  const name = document.getElementById('nameInput').value.trim();
+  if (!name) return alert("Voer een naam in!");
+  playerName = name;
+  document.getElementById('game').style.display = 'block';
+  document.getElementById('nameInput').style.display = 'none';
+  document.getElementById('startBtn').style.display = 'none';
+  loadGame();
+  updateLeaderboard();
+};
 
-// --- simple local identity storage ---
-function saveIdentity(data){
-  localStorage.setItem('cookie_tim_identity', JSON.stringify(data));
-}
-function loadIdentity(){
-  try{return JSON.parse(localStorage.getItem('cookie_tim_identity')||'null')}
-  catch(e){return null}
-}
-function clearIdentity(){ localStorage.removeItem('cookie_tim_identity') }
+// Cookie klikken
+cookieEl.onclick = () => {
+  cookies++;
+  cookieCountEl.textContent = cookies;
+  saveGame();
+};
 
-// --- initial state ---
-const state = {
-  cookies: 0,
-  perClick: 1,
-  perSec: 0,
-  bought: 0,
-  upgrades: {}, // id -> level
-}
-
-// --- upgrades definitions (20 image-based) ---
-const upgrades = [
-  {id:1, name:'Ouderwetse Oven', img:'public/images/png2.png', baseCost:15, cps:0.1, cpc:0, desc:'Kleine oven die passief bakt.'},
-  {id:2, name:'Bakkershandschoen', img:'public/images/png3.png', baseCost:60, cps:0.5, cpc:0, desc:'Beter grijpen, bakt meer.'},
-  {id:3, name:'Siliconen Spatel', img:'public/images/png4.png', baseCost:200, cps:2, cpc:0, desc:'Snellere bereiding.'},
-  {id:4, name:'Automatische Oven', img:'public/images/png5.png', baseCost:800, cps:8, cpc:0, desc:'Automatische productie.'},
-  {id:5, name:'Kwantumdeeg', img:'public/images/png6.png', baseCost:3000, cps:25, cpc:0, desc:'Deeg uit de toekomst.'},
-  {id:6, name:'Gold Dipper', img:'public/images/png7.png', baseCost:12000, cps:80, cpc:0, desc:'Gouden dips verhogen productie.'},
-  {id:7, name:'Cookie Robot', img:'public/images/png8.png', baseCost:50000, cps:300, cpc:0, desc:'Legio robots bakken cookies.'},
-  {id:8, name:'Perkament Recept', img:'public/images/png9.png', baseCost:200000, cps:1000, cpc:0, desc:'Verbeterd recept.'},
-  {id:9, name:'Maanbloem Suiker', img:'public/images/png10.png', baseCost:1000000, cps:5000, cpc:0, desc:'Magische suiker.'},
-  {id:10, name:'Legendarische Mixer', img:'public/images/png11.png', baseCost:5e6, cps:20000, cpc:0, desc:'Mixer van legende.'},
-  {id:11, name:'Click-Implantaat', img:'public/images/png12.png', baseCost:2e7, cps:0, cpc:10, desc:'Elke klik is krachtiger.'},
-  {id:12, name:'Master Chef', img:'public/images/png13.png', baseCost:8e7, cps:100000, cpc:0, desc:'Chef versnelt alles.'},
-  {id:13, name:'Temporal Oven', img:'public/images/png14.png', baseCost:3.5e8, cps:400000, cpc:0, desc:'Bakt in meerdere tijden tegelijk.'},
-  {id:14, name:'Genetic Cookie', img:'public/images/png15.png', baseCost:1.2e9, cps:1e6, cpc:0, desc:'Genetisch geoptimaliseerde koekjes.'},
-  {id:15, name:'Fabrieksketen', img:'public/images/png16.png', baseCost:5e9, cps:5e6, cpc:0, desc:'Volledige industriële keten.'},
-  {id:16, name:'Galactische Oven', img:'public/images/png17.png', baseCost:2e10, cps:2e7, cpc:0, desc:'Oven met kosmische energie.'},
-  {id:17, name:'Singulariteits Mixer', img:'public/images/png18.png', baseCost:1e11, cps:1e8, cpc:0, desc:'Mix singulariteit.'},
-  {id:18, name:"Tim's Blessing", img:'public/images/png19.png', baseCost:5e11, cps:5e8, cpc:0, desc:'Zegening van Tim zelf.'},
-  {id:19, name:'Het Oneindige Recept', img:'public/images/png20.png', baseCost:2e12, cps:2e9, cpc:0, desc:'Oneindige koekjes.'},
-  {id:20, name:'Mysterie Lol', img:'public/images/png1.png', baseCost:1e13, cps:1e10, cpc:100, desc:'Het ultieme upgrade (PNG1 gebruikt)'},
-];
-
-// compute cost given base and level (simple scaling)
-function costFor(base, level){
-  return Math.ceil(base * Math.pow(1.15, level));
+// Upgrades genereren
+for (let i = 1; i <= 20; i++) {
+  const cost = i * 50;
+  const power = i;
+  const div = document.createElement('div');
+  div.className = 'upgrade';
+  div.innerHTML = `<img src="images/png${i}.png"><br>Upgrade ${i}<br>💰 ${cost}`;
+  div.onclick = () => buyUpgrade(i, cost, power);
+  upgradesEl.appendChild(div);
 }
 
-// --- UI refs ---
-const cookieBtn = document.getElementById('cookieBtn');
-const cookieCount = document.getElementById('cookieCount');
-const perClickEl = document.getElementById('perClick');
-const perSecEl = document.getElementById('perSec');
-const boughtEl = document.getElementById('bought');
-const upgradesList = document.getElementById('upgradesList');
-const search = document.getElementById('search');
-const usernameInput = document.getElementById('username');
-const btnRegister = document.getElementById('btnRegister');
-const btnLogout = document.getElementById('btnLogout');
-const btnDelete = document.getElementById('btnDelete');
-const btnSaveServer = document.getElementById('saveServer');
-const btnLoadServer = document.getElementById('loadServer');
-const btnSaveLocal = document.getElementById('saveLocal');
-const btnReset = document.getElementById('reset');
-const leaderboardEl = document.getElementById('leaderboard');
-const playerNameEl = document.getElementById('playerName');
-const playerScoreEl = document.getElementById('playerScore');
-const autoSpeed = document.getElementById('autoSpeed');
-
-// identity (api_key & player_id) stored in localStorage after register/login
-let identity = loadIdentity();
-
-// --- render functions ---
-function render(){
-  cookieCount.textContent = formatNumber(state.cookies) + ' koekjes';
-  perClickEl.textContent = formatNumber(state.perClick);
-  perSecEl.textContent = formatNumber(state.perSec);
-  boughtEl.textContent = state.bought;
-  renderUpgrades(search.value || '');
-  updatePlayerInfo();
-}
-
-function renderUpgrades(filter=''){
-  upgradesList.innerHTML = '';
-  const q = filter.trim().toLowerCase();
-  for(const u of upgrades){
-    if (q && !u.name.toLowerCase().includes(q) && !u.desc.toLowerCase().includes(q)) continue;
-    const lvl = state.upgrades[u.id] || 0;
-    const cost = costFor(u.baseCost, lvl);
-    const node = document.createElement('div');
-    node.className = 'upgrade';
-    node.innerHTML = `
-      <img src="${u.img}" alt="${u.name}" onerror="this.style.opacity=.5;this.style.background='#061222'">
-      <div class="u-info">
-        <div class="u-title">${u.name} <span style="font-weight:600;color:var(--muted);font-size:12px">lvl ${lvl}</span></div>
-        <div class="u-desc">${u.desc}</div>
-      </div>
-      <div class="u-buy">
-        <div style="font-weight:800">${Math.floor(cost).toLocaleString()}</div>
-        <div style="display:flex;gap:6px">
-          <button class="small buyOne" data-id="${u.id}">Koop</button>
-          <button class="small btn-muted buy10" data-id="${u.id}">Koop x10</button>
-        </div>
-      </div>
-    `;
-    upgradesList.appendChild(node);
-  }
-  // add event listeners
-  document.querySelectorAll('.buyOne').forEach(b=>b.addEventListener('click', ()=>{ buyUpgrade(parseInt(b.dataset.id,10),1) }));
-  document.querySelectorAll('.buy10').forEach(b=>b.addEventListener('click', ()=>{ buyUpgrade(parseInt(b.dataset.id,10),10) }));
-}
-
-function updatePlayerInfo(){
-  if(identity && identity.name){
-    playerNameEl.textContent = identity.name;
-    playerScoreEl.textContent = formatNumber(state.cookies);
+function buyUpgrade(id, cost, power) {
+  if (cookies >= cost) {
+    cookies -= cost;
+    cps += power;
+    cookieCountEl.textContent = cookies;
+    alert(`Upgrade ${id} gekocht! 🍪 +${power}/s`);
+    saveGame();
   } else {
-    playerNameEl.textContent = '—';
-    playerScoreEl.textContent = '—';
+    alert("Niet genoeg cookies!");
   }
 }
 
-function formatNumber(n){
-  if (n < 1000) return Math.floor(n).toString();
-  if (n < 1e6) return (n/1000).toFixed(2) + 'k';
-  if (n < 1e9) return (n/1e6).toFixed(2) + 'M';
-  return n.toExponential(2);
+// Opslaan in localStorage
+function saveGame() {
+  const data = JSON.parse(localStorage.getItem('tim_clicker_data') || '{}');
+  data[playerName] = { cookies, cps };
+  localStorage.setItem('tim_clicker_data', JSON.stringify(data));
+  updateLeaderboard();
 }
 
-// --- game logic ---
-cookieBtn.addEventListener('click', ()=>{
-  state.cookies += state.perClick;
-  render();
-});
-
-document.addEventListener('keydown', (e)=>{
-  if (e.key.toLowerCase() === 'u'){ state.cookies += 100000; render(); }
-  if (e.code === 'Space'){ e.preventDefault(); cookieBtn.click(); }
-});
-
-// passive tick (cps)
-let lastTick = Date.now();
-setInterval(()=>{
-  const now = Date.now();
-  const dt = (now - lastTick) / 1000;
-  lastTick = now;
-  // auto-click option: handled clientside as multiplier to perSec
-  state.cookies += state.perSec * dt;
-  // also allow autoklik checked? For simplicity: auto click is derived from upgrades with cpc effects
-  render();
-}, 200);
-
-// buy upgrade
-function buyUpgrade(id, qty = 1){
-  const u = upgrades.find(x=>x.id === id);
-  if (!u) return;
-  let bought = 0;
-  for(let i=0;i<qty;i++){
-    const lvl = state.upgrades[id] || 0;
-    const cost = costFor(u.baseCost, lvl);
-    if (state.cookies >= cost){
-      state.cookies -= cost;
-      state.upgrades[id] = (state.upgrades[id] || 0) + 1;
-      // apply effects
-      if (u.cps) state.perSec += u.cps;
-      if (u.cpc) state.perClick += u.cpc;
-      state.bought += 1;
-      bought++;
-    } else break;
-  }
-  if (bought > 0){
-    render();
+// Laden van opgeslagen data
+function loadGame() {
+  const data = JSON.parse(localStorage.getItem('tim_clicker_data') || '{}');
+  if (data[playerName]) {
+    cookies = data[playerName].cookies || 0;
+    cps = data[playerName].cps || 0;
+    cookieCountEl.textContent = cookies;
   }
 }
 
-// search
-search.addEventListener('input', ()=> renderUpgrades(search.value));
-
-// persistence: local save/load
-btnSaveLocal.addEventListener('click', ()=>{
-  const payload = {
-    savedAt: Date.now(),
-    state: {
-      cookies: state.cookies,
-      perClick: state.perClick,
-      perSec: state.perSec,
-      bought: state.bought,
-      upgrades: state.upgrades
-    },
-    identity
-  };
-  localStorage.setItem('cookie_tim_local_save', JSON.stringify(payload));
-  alert('Lokaal opgeslagen');
-});
-
-btnReset.addEventListener('click', ()=>{
-  if (!confirm('Reset lokaal (verwijder lokale save)?')) return;
-  localStorage.removeItem('cookie_tim_local_save');
-  location.reload();
-});
-
-// --- Register / Login ---
-btnRegister.addEventListener('click', async ()=>{
-  const name = usernameInput.value.trim();
-  if (!name) return alert('Voer een naam in.');
-  try{
-    const res = await fetch(API_BASE + '/register', {
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ name })
-    });
-    if (!res.ok) throw new Error('Register failed');
-    const data = await res.json();
-    identity = { player_id: data.player_id, api_key: data.api_key, name: data.name };
-    saveIdentity(identity);
-    alert('Geregistreerd en ingelogd als ' + identity.name);
-    render();
-    fetchLeaderboard();
-  }catch(err){
-    console.error(err);
-    alert('Registratie mislukt');
-  }
-});
-
-// logout
-btnLogout.addEventListener('click', ()=>{
-  clearIdentity();
-  identity = null;
-  alert('Uitgelogd (lokale key verwijderd)');
-  render();
-});
-
-// delete account on server
-btnDelete.addEventListener('click', async ()=>{
-  if (!identity || !identity.api_key) return alert('Je bent niet ingelogd');
-  if (!confirm('Weet je zeker dat je je server-account wilt verwijderen? Dit verwijdert je data op de server.')) return;
-  try{
-    const res = await fetch(API_BASE + '/player/' + identity.player_id, {
-      method:'DELETE',
-      headers:{ 'x-api-key': identity.api_key }
-    });
-    if (!res.ok) throw new Error('Delete failed');
-    clearIdentity();
-    identity = null;
-    alert('Account verwijderd op server');
-    render();
-    fetchLeaderboard();
-  }catch(e){
-    console.error(e); alert('Kon account niet verwijderen');
-  }
-});
-
-// save to server (upsert)
-btnSaveServer.addEventListener('click', async ()=>{
-  if (!identity || !identity.api_key) return alert('Je moet eerst registreren / inloggen');
-  try{
-    const payload = {
-      cookies: Math.floor(state.cookies),
-      upgrades: state.upgrades,
-      perClick: state.perClick,
-      perSec: state.perSec
-    };
-    const res = await fetch(API_BASE + '/save', {
-      method:'POST', headers:{'Content-Type':'application/json','x-api-key': identity.api_key},
-      body: JSON.stringify(payload)
-    });
-    if (!res.ok) throw new Error('Save failed');
-    alert('Opgeslagen op server');
-    fetchLeaderboard();
-  }catch(e){
-    console.error(e); alert('Kon niet opslaan op server');
-  }
-});
-
-// load from server
-btnLoadServer.addEventListener('click', async ()=>{
-  if (!identity || !identity.api_key) return alert('Je moet eerst registreren / inloggen');
-  try{
-    const res = await fetch(API_BASE + '/player/' + identity.player_id, { headers:{'x-api-key': identity.api_key} });
-    if (!res.ok) throw new Error('Load failed');
-    const data = await res.json();
-    if (data && data.cookies != null){
-      state.cookies = Number(data.cookies);
-      state.perClick = Number(data.perClick || state.perClick);
-      state.perSec = Number(data.perSec || state.perSec);
-      state.bought = data.bought || state.bought;
-      state.upgrades = data.upgrades || {};
-      alert('Lade van server voltooid');
-      render();
-    } else {
-      alert('Geen data gevonden op server');
-    }
-  }catch(e){ console.error(e); alert('Kon niet laden van server') }
-});
-
-// fetch leaderboard
-async function fetchLeaderboard(){
-  try{
-    const res = await fetch(API_BASE + '/leaderboard');
-    if (!res.ok) throw new Error('Leaderboard fetch failed');
-    const data = await res.json();
-    leaderboardEl.innerHTML = '';
-    data.forEach((p, i) =>{
-      const row = document.createElement('div');
-      row.className = 'leader-row';
-      row.innerHTML = `<div style="font-weight:700">${i+1}. ${escapeHtml(p.name)}</div><div>${Number(p.cookies).toLocaleString()}</div>`;
-      leaderboardEl.appendChild(row);
-    });
-  }catch(e){
-    console.error(e);
+// Leaderboard tonen
+function updateLeaderboard() {
+  const data = JSON.parse(localStorage.getItem('tim_clicker_data') || '{}');
+  const players = Object.entries(data).map(([name, p]) => ({ name, cookies: p.cookies || 0 }));
+  players.sort((a, b) => b.cookies - a.cookies);
+  leaderboardList.innerHTML = "";
+  for (const p of players.slice(0, 10)) {
+    const li = document.createElement('li');
+    li.textContent = `${p.name}: ${p.cookies} 🍪`;
+    leaderboardList.appendChild(li);
   }
 }
 
-// initial load
-render();
-fetchLeaderboard();
-setInterval(fetchLeaderboard, 15000); // refresh leaderboard every 15s
-
-// helper
-function escapeHtml(s){ return String(s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
-
-// try to auto-login if identity exists
-if (identity && identity.api_key){
-  usernameInput.value = identity.name || '';
-  updatePlayerInfo();
-}
-
-// load local save if exists
-(function loadLocal(){
-  try{
-    const raw = localStorage.getItem('cookie_tim_local_save');
-    if (!raw) return;
-    const saved = JSON.parse(raw);
-    if (saved && saved.state){
-      if (confirm('Lokaal save gevonden — wil je deze laden?')) {
-        Object.assign(state, saved.state);
-        render();
-      }
-    }
-  }catch(e){}
-})();
+// Cookies per seconde
+setInterval(() => {
+  cookies += cps;
+  cookieCountEl.textContent = cookies;
+  saveGame();
+}, 1000);
 </script>
 </body>
 </html>
