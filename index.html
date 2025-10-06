@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Cookie Clicker (Tim) — Veel upgrades</title>
+  <style>
+    :root{--bg:#0f1724;--card:#0b1220;--accent:#f59e0b;--muted:#9aa4b2}
+    *{box-sizing:border-box;font-family:Inter,system-ui,Segoe UI,Roboto,'Helvetica Neue',Arial}
+    body{margin:0;background:linear-gradient(180deg,#071225 0%, #071935 100%);color:#e6eef8}
+    .wrap{max-width:1100px;margin:28px auto;padding:20px}
+    header{display:flex;gap:16px;align-items:center}
+    h1{margin:0;font-size:20px}
+    .panel{display:grid;grid-template-columns:360px 1fr;gap:16px;margin-top:18px}
+    .card{background:var(--card);padding:14px;border-radius:12px;box-shadow:0 6px 20px rgba(2,6,23,.6)}
+    .big-cookie{display:flex;flex-direction:column;align-items:center;gap:12px}
+    #cookie{width:220px;height:220px;border-radius:50%;background:url('png1') center/cover no-repeat;box-shadow:inset 0 -6px 20px rgba(0,0,0,.6)}
+    #cookie:active{transform:scale(.98)}
+    .stats{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+    .stat{background:rgba(255,255,255,.03);padding:8px 10px;border-radius:8px;font-size:14px}
+    .shop{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}
+    .upgrade{display:flex;flex-direction:column;gap:8px;padding:10px;border-radius:10px;background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.01));cursor:pointer;transition:transform .08s ease}
+    .upgrade:hover{transform:translateY(-4px)}
+    .upgrade.locked{opacity:.55}
+    .upgrade img{width:100%;height:90px;object-fit:cover;border-radius:8px}
+    .u-meta{display:flex;justify-content:space-between;align-items:center}
+    .u-name{font-weight:600}
+    .controls{display:flex;gap:8px;align-items:center}
+    button{background:var(--accent);border:none;padding:8px 12px;border-radius:8px;color:#07203a;font-weight:700;cursor:pointer}
+    .small{padding:6px 8px;font-size:13px}
+    footer{margin-top:18px;text-align:center;color:var(--muted);font-size:13px}
+    .right-col{display:flex;flex-direction:column;gap:12px}
+    .log{height:160px;overflow:auto;background:rgba(255,255,255,.02);padding:10px;border-radius:8px}
+    .row{display:flex;gap:8px;align-items:center}
+    .search{padding:8px;border-radius:8px;background:#061222;border:1px solid rgba(255,255,255,.03);width:100%}
+    .top-controls{display:flex;gap:8px;align-items:center}
+    .progress{height:8px;background:rgba(255,255,255,.04);border-radius:8px;overflow:hidden}
+    .progress>i{display:block;height:100%;background:linear-gradient(90deg,#f59e0b,#f97316);width:0%}
+    @media(max-width:880px){.panel{grid-template-columns:1fr}}  
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>Cookie Clicker (Tim) — Mega upgrades</h1>
+      <div style="margin-left:auto;color:var(--muted)">Gebruik afbeeldingsnamen png1 t/m png20 in dezelfde map</div>
+    </header>
+
+    <div class="panel">
+      <div class="card">
+        <div class="big-cookie">
+          <div id="cookie" title="Klik! (of spatie)"></div>
+          <div class="stats">
+            <div class="stat">Cookies: <strong id="cookies">0</strong></div>
+            <div class="stat">CPS: <strong id="cps">0</strong></div>
+            <div class="stat">Per klik: <strong id="cpc">1</strong></div>
+            <div class="stat">Upgrades gekocht: <strong id="bought">0</strong></div>
+          </div>
+
+          <div class="row" style="margin-top:8px">
+            <button id="reset" class="small">Reset (verwijdert save)</button>
+            <button id="save" class="small" style="background:#64748b;color:#fff">Opslaan</button>
+            <button id="export" class="small" style="background:#0ea5a4;color:#042f2f">Export</button>
+            <button id="import" class="small" style="background:#7c3aed;color:#fff">Import</button>
+            <input id="impField" placeholder='Plak JSON hier' style="flex:1;padding:8px;border-radius:8px;background:#061222;border:1px solid rgba(255,255,255,.03);color:#fff"/>
+          </div>
+        </div>
+      </div>
+
+      <div class="right-col">
+        <div class="card">
+          <div class="top-controls row">
+            <input id="search" class="search" placeholder="Filter upgrades...">
+            <div style="width:160px" class="progress" title="Progres naar volgende gratis item"><i id="progressBar"></i></div>
+          </div>
+          <h3 style="margin:12px 0 6px 0">Winkel — upgrades</h3>
+          <div id="shop" class="shop"></div>
+        </div>
+
+        <div class="card">
+          <div class="row" style="justify-content:space-between;align-items:flex-start">
+            <div>
+              <strong>Log</strong>
+              <div class="log" id="log"></div>
+            </div>
+            <div style="width:260px">
+              <div style="margin-bottom:8px"><strong>Auto clickers & multipliers</strong></div>
+              <div class="row" style="flex-direction:column;gap:6px">
+                <label><input type="checkbox" id="autoclick"> Auto click (1 klik/sec)</label>
+                <label><input type="checkbox" id="doubleClick"> Dubbele klik (verhoogt per klik)</label>
+                <label><input type="checkbox" id="boostCps"> Booster CPS (2x CPS)</label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" style="text-align:center">
+          <div style="margin-bottom:8px"><strong>Tips</strong></div>
+          <div style="color:var(--muted)">Gebruik spatie of klik op de cookie. Afbeeldingen png1 t/m png20 moeten in dezelfde map als dit HTML-bestand zitten.</div>
+        </div>
+      </div>
+    </div>
+
+    <footer>Gemaakt voor Tim — veel upgrades! (png1..png20)</footer>
+  </div>
+
+  <script>
+    // --- Game state ---
+    const state = {
+      cookies: 0,
+      cps: 0,
+      cpc: 1,
+      bought: 0,
+      upgrades: [],
+      lastTick: Date.now()
+    }
+
+    // --- Define 20 upgrades, gebruik png2..png20 voor visuals ---
+    const baseUpgrades = [
+      {id:1, name:'Ouderwetse Oven', img:'png2', cost:15, cps:0.1, cpc:0, desc:'Kleine oven die passief bakt.'},
+      {id:2, name:'Bakkershandschoen', img:'png3', cost:60, cps:0.5, cpc:0, desc:'Beter grijpen, bakt meer.'},
+      {id:3, name:'Siliconen Spatel', img:'png4', cost:200, cps:2, cpc:0, desc:'Snellere bereiding.'},
+      {id:4, name:'Automatische Oven', img:'png5', cost:800, cps:8, cpc:0, desc:'Automatische productie.'},
+      {id:5, name:'Kwantumdeeg', img:'png6', cost:3000, cps:25, cpc:0, desc:'Deeg uit de toekomst.'},
+      {id:6, name:'Gold Dipper', img:'png7', cost:12000, cps:80, cpc:0, desc:'Gouden dips verhogen productie.'},
+      {id:7, name:'Cookie Robot', img:'png8', cost:50000, cps:300, cpc:0, desc:'Legio robots bakken cookies.'},
+      {id:8, name:'Perkament Recept', img:'png9', cost:200000, cps:1000, cpc:0, desc:'Verbeterd recept.'},
+      {id:9, name:'Maanbloem Suiker', img:'png10', cost:1000000, cps:5000, cpc:0, desc:'Magische suiker.'},
+      {id:10, name:'Legendarische Mixer', img:'png11', cost:5e6, cps:20000, cpc:0, desc:'Mixer van legende.'},
+      {id:11, name:'Click-Implantaat', img:'png12', cost:2e7, cps:0, cpc:10, desc:'Elke klik is krachtiger.'},
+      {id:12, name:'Master Chef', img:'png13', cost:8e7, cps:100000, cpc:0, desc:'Chef versnelt alles.'},
+      {id:13, name:'Temporal Oven', img:'png14', cost:3.5e8, cps:400000, cpc:0, desc:'Bakt in meerdere tijden tegelijk.'},
+      {id:14, name:'Genetic Cookie', img:'png15', cost:1.2e9, cps:1e6, cpc:0, desc:'Genetisch geoptimaliseerde koekjes.'},
+      {id:15, name:'Fabrieksketen', img:'png16', cost:5e9, cps:5e6, cpc:0, desc:'Volledige industriële keten.'},
+      {id:16, name:'Galactische Oven', img:'png17', cost:2e10, cps:2e7, cpc:0, desc:'Oven met kosmische energie.'},
+      {id:17, name:'Singulariteits Mixer', img:'png18', cost:1e11, cps:1e8, cpc:0, desc:'Mix singulariteit.'},
+      {id:18, name:'Tim\'s Blessing', img:'png19', cost:5e11, cps:5e8, cpc:0, desc:'Zegening van Tim zelf.'},
+      {id:19, name:'Het Oneindige Recept', img:'png20', cost:2e12, cps:2e9, cpc:0, desc:'Oneindige koekjes.'},
+      {id:20, name:'Mysterie Lol', img:'png1', cost:1e13, cps:1e10, cpc:100, desc:'Het ultieme upgrade (PNG1 gebruikt)'}
+    ];
+
+    // Initialize state.upgrades with scaling and level
+    function initUpgrades(){
+      state.upgrades = baseUpgrades.map(u=>({
+        ...u,
+        level:0,
+        // each purchase increases cost by 15% by default
+        currentCost: u.cost
+      }))
+    }
+
+    initUpgrades();
+
+    // --- Utilities ---
+    const fmt = n => {
+      if (n<1000) return n.toFixed(2).replace(/\.00$/,'')
+      const units=['K','M','B','T','Qa','Qi','Sx','Sp','Oc','No','Dc']
+      let k=0; while(n>=1000 && k<units.length-1){n/=1000;k++}
+      return n.toFixed(2).replace(/\.00$/,'')+units[k-1] ? units[k-1] : ''
+    }
+
+    // --- Rendering ---
+    const el = id=>document.getElementById(id)
+    function render(){
+      el('cookies').innerText = Math.floor(state.cookies).toLocaleString();
+      el('cps').innerText = (state.cps).toFixed(2);
+      el('cpc').innerText = state.cpc.toFixed(2);
+      el('bought').innerText = state.bought;
+      renderShop();
+      updateProgressBar();
+    }
+
+    function renderShop(filter=''){
+      const shop = el('shop'); shop.innerHTML='';
+      const q = filter.toLowerCase();
+      state.upgrades.forEach(u=>{
+        if (q && !u.name.toLowerCase().includes(q) && !(u.desc||'').toLowerCase().includes(q)) return;
+        const node = document.createElement('div');
+        node.className='upgrade'+(state.cookies>=u.currentCost? '':' locked');
+        node.innerHTML = `
+          <img src="${u.img}" alt="${u.name}" onerror="this.style.opacity=.5;this.style.background='#061222'">
+          <div class="u-meta">
+            <div>
+              <div class="u-name">${u.name}</div>
+              <div style="font-size:12px;color:var(--muted)">${u.desc}</div>
+            </div>
+            <div style="text-align:right">
+              <div style="font-weight:800">${Math.floor(u.currentCost).toLocaleString()}</div>
+              <div style="font-size:12px;color:var(--muted)">lvl ${u.level}</div>
+            </div>
+          </div>
+        `;
+        node.addEventListener('click',()=>buyUpgrade(u.id));
+        shop.appendChild(node);
+      })
+    }
+
+    function updateProgressBar(){
+      const nextFree = 50; // example: every 50 upgrades small reward
+      const val = (state.bought % nextFree) / nextFree * 100;
+      el('progressBar').style.width = val + '%';
+    }
+
+    // --- Purchasing ---
+    function buyUpgrade(id){
+      const up = state.upgrades.find(x=>x.id===id);
+      if (!up) return;
+      if (state.cookies < up.currentCost) { log('Niet genoeg cookies'); return }
+      state.cookies -= up.currentCost;
+      up.level += 1;
+      state.bought += 1;
+      // apply effects
+      if (up.cps) state.cps += up.cps;
+      if (up.cpc) state.cpc += up.cpc;
+      // increase cost (scaling)
+      up.currentCost = Math.ceil(up.currentCost * 1.15);
+      log(`Gekocht: ${up.name} (lvl ${up.level})`);
+      render();
+      save();
+    }
+
+    // --- Passive tick ---
+    function tick(){
+      const now = Date.now();
+      const dt = (now - state.lastTick)/1000; state.lastTick = now;
+      // apply boosts from toggles
+      let cps = state.cps;
+      if (el('boostCps').checked) cps *= 2;
+      state.cookies += cps * dt;
+      // auto click
+      if (el('autoclick').checked) state.cookies += (el('doubleClick').checked ? state.cpc*2 : state.cpc) * dt;
+      render();
+    }
+
+    setInterval(tick, 100);
+
+    // --- Clicking ---
+    el('cookie').addEventListener('click', ()=>{
+      const mult = el('doubleClick').checked ? 2:1;
+      state.cookies += state.cpc * mult;
+      render();
+    })
+    document.addEventListener('keydown', e=>{ if (e.code==='Space') { e.preventDefault(); el('cookie').click(); } });
+
+    // --- Controls ---
+    el('search').addEventListener('input', (e)=>renderShop(e.target.value));
+    el('save').addEventListener('click', save);
+    el('reset').addEventListener('click', ()=>{ if(confirm('Reset en verwijder save?')){ localStorage.removeItem('tim_cookie_save'); location.reload(); } });
+    el('export').addEventListener('click', ()=>{ const s = JSON.stringify(state); prompt('Copy save JSON:', s); });
+    el('import').addEventListener('click', ()=>{
+      try{
+        const obj = JSON.parse(el('impField').value);
+        Object.assign(state, obj);
+        // ensure upgrades structure
+        if (!state.upgrades || state.upgrades.length===0) initUpgrades();
+        render(); save();
+        alert('Import gelukt');
+      }catch(e){ alert('Ongeldige JSON') }
+    })
+
+    // --- Logging ---
+    function log(t){
+      const node = document.createElement('div'); node.innerText = `[${new Date().toLocaleTimeString()}] ${t}`;
+      const l = el('log'); l.prepend(node);
+      while(l.childElementCount>200) l.removeChild(l.lastChild);
+    }
+
+    // --- Save / Load ---
+    function save(){
+      const copy = {
+        cookies: state.cookies,
+        cps: state.cps,
+        cpc: state.cpc,
+        bought: state.bought,
+        upgrades: state.upgrades.map(u=>({id:u.id, level:u.level, currentCost:u.currentCost}))
+      }
+      localStorage.setItem('tim_cookie_save', JSON.stringify(copy));
+      log('Game opgeslagen');
+    }
+
+    function load(){
+      const s = localStorage.getItem('tim_cookie_save');
+      if (!s) return;
+      try{
+        const saved = JSON.parse(s);
+        state.cookies = saved.cookies || 0;
+        state.cps = saved.cps || 0;
+        state.cpc = saved.cpc || 1;
+        state.bought = saved.bought || 0;
+        if (saved.upgrades){
+          initUpgrades();
+          saved.upgrades.forEach(su=>{
+            const u = state.upgrades.find(x=>x.id===su.id);
+            if (u){ u.level = su.level || 0; u.currentCost = su.currentCost || u.currentCost; if(u.cps) state.cps += u.cps * u.level; if(u.cpc) state.cpc += u.cpc * u.level }
+          })
+        }
+        log('Save geladen');
+      }catch(e){ console.warn('Load failed',e) }
+    }
+
+    // auto-save
+    setInterval(save, 15000);
+
+    // --- Init ---
+    load(); render();
+
+    // Friendly touch: unlock cheap freebies as you buy more
+    setInterval(()=>{
+      // every 60s give a small bonus based on bought
+      const bonus = Math.floor(state.bought/10);
+      if (bonus>0){ state.cookies += bonus; log(`Bonus: ${bonus} cookies (op basis van ${state.bought} upgrades)`); }
+    },60000);
+
+  </script>
+</body>
+</html>
