@@ -4,18 +4,168 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Tim Clicker 🍪</title>
-  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      background: radial-gradient(circle, #4e342e, #3e2723);
+      color: white;
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+    }
+
+    h1 {
+      font-size: 2.5em;
+      margin-top: 20px;
+    }
+
+    #cookie {
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      margin: 20px auto;
+      cursor: pointer;
+      transition: transform 0.1s;
+    }
+
+    #cookie:active {
+      transform: scale(0.9);
+    }
+
+    #stats {
+      margin: 20px;
+      font-size: 1.3em;
+    }
+
+    .upgrade {
+      display: inline-block;
+      background: #6d4c41;
+      padding: 10px;
+      border-radius: 15px;
+      margin: 5px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .upgrade:hover {
+      background: #8d6e63;
+    }
+
+    .upgrade img {
+      width: 50px;
+      height: 50px;
+    }
+
+    .leaderboard {
+      background: rgba(255, 255, 255, 0.1);
+      margin: 20px auto;
+      width: 300px;
+      border-radius: 10px;
+      padding: 10px;
+    }
+
+    footer {
+      margin-top: 30px;
+      font-size: 0.9em;
+      opacity: 0.7;
+    }
+  </style>
 </head>
 <body>
-  <div class="container">
-    <h1>🍪 Tim Clicker 🍪</h1>
-    <h2 id="cookies">Cookies: 0</h2>
-    <img id="cookie" src="cookie.png" alt="Cookie" />
-    <h3 id="cps">CPS: 0</h3>
-
-    <div id="upgrades" class="upgrades"></div>
+  <h1>🍪 Tim Clicker 🍪</h1>
+  <img src="cookie.png" id="cookie" alt="cookie" />
+  <div id="stats">
+    Cookies: <span id="cookies">0</span><br />
+    CPS: <span id="cps">0</span>
   </div>
 
-  <script src="script.js"></script>
+  <div id="upgrades"></div>
+
+  <div class="leaderboard">
+    <h3>🏆 Local Leaderboard 🏆</h3>
+    <div id="leaderboard-list"></div>
+  </div>
+
+  <footer>Made with ❤️ by Tim</footer>
+
+  <script>
+    let cookies = parseInt(localStorage.getItem("cookies")) || 0;
+    let cps = parseInt(localStorage.getItem("cps")) || 0;
+    const upgrades = [
+      { name: "Cursor", cost: 50, type: "add", value: 1, img: "upgrade1.png" },
+      { name: "Grandma", cost: 250, type: "add", value: 5, img: "upgrade2.png" },
+      { name: "Factory", cost: 1000, type: "mult", value: 2, img: "upgrade3.png" }
+    ];
+
+    const cookie = document.getElementById("cookie");
+    const cookiesText = document.getElementById("cookies");
+    const cpsText = document.getElementById("cps");
+    const upgradesDiv = document.getElementById("upgrades");
+    const leaderboardDiv = document.getElementById("leaderboard-list");
+
+    function save() {
+      localStorage.setItem("cookies", cookies);
+      localStorage.setItem("cps", cps);
+    }
+
+    function updateStats() {
+      cookiesText.textContent = cookies;
+      cpsText.textContent = cps;
+    }
+
+    cookie.onclick = () => {
+      cookies++;
+      updateStats();
+      save();
+    };
+
+    function autoClick() {
+      cookies += cps;
+      updateStats();
+      save();
+    }
+
+    setInterval(autoClick, 1000);
+
+    function loadUpgrades() {
+      upgradesDiv.innerHTML = "";
+      upgrades.forEach((upg, i) => {
+        const div = document.createElement("div");
+        div.className = "upgrade";
+        div.innerHTML = `<img src="${upg.img}" alt="${upg.name}"><br>${upg.name}<br>💰 ${upg.cost}`;
+        div.onclick = () => buyUpgrade(i);
+        upgradesDiv.appendChild(div);
+      });
+    }
+
+    function buyUpgrade(i) {
+      const u = upgrades[i];
+      if (cookies >= u.cost) {
+        cookies -= u.cost;
+        if (u.type === "add") cps += u.value;
+        if (u.type === "mult") cps *= u.value;
+        u.cost = Math.floor(u.cost * 1.5);
+        updateStats();
+        save();
+        loadUpgrades();
+        updateLeaderboard();
+      } else {
+        alert("Not enough cookies!");
+      }
+    }
+
+    function updateLeaderboard() {
+      let board = JSON.parse(localStorage.getItem("leaderboard")) || [];
+      board.push({ date: new Date().toLocaleString(), cookies });
+      board = board.slice(-5);
+      localStorage.setItem("leaderboard", JSON.stringify(board));
+      leaderboardDiv.innerHTML = board.map(b => `<div>${b.date}: ${b.cookies} 🍪</div>`).join("");
+    }
+
+    updateStats();
+    loadUpgrades();
+    updateLeaderboard();
+  </script>
 </body>
 </html>
