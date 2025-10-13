@@ -1,74 +1,54 @@
-import React, { useState, useEffect } from "react";
-import "./styles.css";
-import cookieImg from "../public/cookie.png";
-import upgrade1 from "../public/upgrade1.png";
-import upgrade2 from "../public/upgrade2.png";
-import upgrade3 from "../public/upgrade3.png";
+let cookies = 0;
+let cps = 0;
 
-export default function App() {
-  const [cookies, setCookies] = useState(0);
-  const [cps, setCps] = useState(0);
-  const [upgrades, setUpgrades] = useState([
-    { id: 1, name: "Cursor", cost: 50, type: "add", value: 1, icon: upgrade1 },
-    { id: 2, name: "Grandma", cost: 250, type: "add", value: 5, icon: upgrade2 },
-    { id: 3, name: "Factory", cost: 1000, type: "mult", value: 2, icon: upgrade3 }
-  ]);
-  const [leaderboard, setLeaderboard] = useState([]);
+const cookieElem = document.getElementById("cookie");
+const cookiesElem = document.getElementById("cookies");
+const cpsElem = document.getElementById("cps");
+const upgradesElem = document.getElementById("upgrades");
 
-  useEffect(() => {
-    const interval = setInterval(() => setCookies(c => c + cps), 1000);
-    return () => clearInterval(interval);
-  }, [cps]);
+const upgrades = [
+  { name: "Cursor", cost: 50, type: "add", value: 1, icon: "upgrade1.png" },
+  { name: "Grandma", cost: 250, type: "add", value: 5, icon: "upgrade2.png" },
+  { name: "Factory", cost: 1000, type: "mult", value: 2, icon: "upgrade3.png" },
+];
 
-  const clickCookie = () => setCookies(c => c + 1);
-
-  const buyUpgrade = (upgrade) => {
-    if (cookies < upgrade.cost) return alert("Not enough cookies!");
-    setCookies(c => c - upgrade.cost);
-    if (upgrade.type === "add") setCps(c => c + upgrade.value);
-    else if (upgrade.type === "mult") setCps(c => c * upgrade.value);
-  };
-
-  const addToLeaderboard = () => {
-    const name = prompt("Enter your name:");
-    if (!name) return;
-    const newBoard = [...leaderboard, { name, cookies }];
-    newBoard.sort((a, b) => b.cookies - a.cookies);
-    setLeaderboard(newBoard.slice(0, 5));
-  };
-
-  return (
-    <div className="App">
-      <h1>🍪 Tim Clicker 🍪</h1>
-      <img
-        src={cookieImg}
-        alt="cookie"
-        className="cookie"
-        onClick={clickCookie}
-      />
-      <h2>Cookies: {cookies}</h2>
-      <h3>CPS: {cps}</h3>
-
-      <div className="upgrades">
-        {upgrades.map(u => (
-          <div key={u.id} className="upgrade" onClick={() => buyUpgrade(u)}>
-            <img src={u.icon} alt={u.name} />
-            <p>{u.name}</p>
-            <p>💰 {u.cost}</p>
-          </div>
-        ))}
-      </div>
-
-      <button onClick={addToLeaderboard}>Save Score 🏆</button>
-
-      <h2>🏆 Leaderboard 🏆</h2>
-      <ul>
-        {leaderboard.map((player, i) => (
-          <li key={i}>
-            {i + 1}. {player.name} — {player.cookies} 🍪
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
+function updateDisplay() {
+  cookiesElem.textContent = `Cookies: ${Math.floor(cookies)}`;
+  cpsElem.textContent = `CPS: ${cps}`;
 }
+
+cookieElem.addEventListener("click", () => {
+  cookies += 1;
+  updateDisplay();
+});
+
+function createUpgrade(upgrade) {
+  const div = document.createElement("div");
+  div.className = "upgrade";
+  div.innerHTML = `
+    <img src="${upgrade.icon}" alt="${upgrade.name}" />
+    <h4>${upgrade.name}</h4>
+    <p>Cost: ${upgrade.cost}</p>
+  `;
+  div.addEventListener("click", () => buyUpgrade(upgrade));
+  upgradesElem.appendChild(div);
+}
+
+function buyUpgrade(upgrade) {
+  if (cookies >= upgrade.cost) {
+    cookies -= upgrade.cost;
+    if (upgrade.type === "add") cps += upgrade.value;
+    else if (upgrade.type === "mult") cps *= upgrade.value;
+    upgrade.cost = Math.floor(upgrade.cost * 1.5);
+    updateDisplay();
+  } else {
+    alert("Not enough cookies!");
+  }
+}
+
+upgrades.forEach(createUpgrade);
+
+setInterval(() => {
+  cookies += cps / 10;
+  updateDisplay();
+}, 100);
