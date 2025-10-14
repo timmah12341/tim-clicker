@@ -1,100 +1,68 @@
-body {
-  background: radial-gradient(circle at center, #222, #111);
-  color: #fefefe;
-  font-family: 'Poppins', sans-serif;
-  text-align: center;
-  margin: 0;
-  padding: 20px;
+:root{
+  --accent:#ffcc00;
+  --dark:#0b0b10;
+  --panel: rgba(255,255,255,0.04);
+  --glass: rgba(255,255,255,0.03);
 }
 
-h1 {
-  font-size: 2.5em;
-  color: #ffcc66;
-  text-shadow: 0 0 10px #ffcc66;
-  margin-bottom: 10px;
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{
+  font-family: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  background: radial-gradient(circle at 25% 20%, #0f1220 0%, #05060a 55%);
+  color:#fff;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  overflow:hidden;
 }
 
-.hidden {
-  display: none;
+.bg{
+  position:fixed;inset:0;pointer-events:none;
+  background: radial-gradient(circle at 10% 20%, rgba(255,204,102,0.03), transparent 6%),
+              radial-gradient(circle at 90% 80%, rgba(255,102,153,0.03), transparent 10%);
 }
 
-#cookie {
-  width: 200px;
-  height: 200px;
-  cursor: pointer;
-  transition: transform 0.1s ease;
-}
+/* Layout */
+#app{display:flex;flex-direction:column;height:100vh;align-items:center;justify-content:flex-start;padding:18px}
+header{width:100%;max-width:1000px;display:flex;justify-content:space-between;align-items:center}
+h1{margin:6px 0;font-size:28px;color:var(--accent);text-shadow:0 0 14px rgba(255,204,102,0.18)}
+#userbar{font-size:14px}
+#changeNameBtn{margin-left:12px;padding:6px 10px;border-radius:8px;border:none;background:var(--panel);color:#fff;cursor:pointer}
 
-#cookie:active {
-  transform: scale(0.9);
-}
+/* main */
+main{width:100%;max-width:1000px;display:grid;grid-template-columns: 1fr 360px;gap:18px;margin-top:18px;align-items:start}
+#game-area{display:flex;flex-direction:column;align-items:center;gap:12px}
+#cookie-wrap{position:relative;width:360px;height:360px;display:flex;align-items:center;justify-content:center}
+#cookie{width:220px;height:220px;border-radius:50%;cursor:pointer;box-shadow:0 10px 40px rgba(0,0,0,0.6), 0 0 30px rgba(255,204,102,0.08);transition:transform .08s ease}
+#cookie:active{transform:scale(.95)}
+#upgrades-orbit{position:absolute;inset:0;pointer-events:none}
 
-#cookies, #cps {
-  font-size: 1.4em;
-  margin: 10px 0;
-}
+/* orbit icons will be absolutely positioned inside #upgrades-orbit and allow pointer events */
+.orbit-item{position:absolute;width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;pointer-events:auto;cursor:pointer;transition:transform .12s;animation:spin 8s linear infinite}
+.orbit-item img{width:44px;height:44px;border-radius:50%}
+.orbit-item:hover{transform:scale(1.12);filter:drop-shadow(0 8px 20px rgba(0,0,0,0.6))}
 
-#upgrades {
-  margin-top: 30px;
-}
+@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
 
-.upgrade {
-  background: #333;
-  border: 2px solid #ffcc66;
-  border-radius: 10px;
-  padding: 10px;
-  margin: 10px auto;
-  width: 250px;
-  cursor: pointer;
-  transition: transform 0.2s, background 0.3s;
-}
+/* stats */
+#stats{display:flex;gap:14px}
+.stat{background:var(--glass);padding:10px 14px;border-radius:10px;color:#ffd87a;font-weight:600}
 
-.upgrade:hover {
-  background: #444;
-  transform: scale(1.05);
-}
+/* shop + leader */
+#shop{background:var(--panel);padding:12px;border-radius:12px}
+#shop h2,#leaderboard h2{margin:0 0 8px 0}
+#shop-list{display:flex;flex-direction:column;gap:8px}
+.shop-item{display:flex;justify-content:space-between;align-items:center;padding:8px;border-radius:8px;background:rgba(255,255,255,0.02);cursor:pointer}
+.shop-item:hover{background:rgba(255,255,255,0.04)}
+.shop-item .cost{color:var(--accent);font-weight:700}
 
-#leaderboard {
-  margin-top: 40px;
-}
+/* leaderboard */
+#leaderboard{background:var(--panel);padding:12px;border-radius:12px}
+#board{padding-left:18px;margin:8px 0 0 0}
 
-#board {
-  list-style: none;
-  padding: 0;
-}
-
-#board li {
-  margin: 5px 0;
-  background: #222;
-  border-radius: 5px;
-  padding: 5px;
-}
-
-.popup {
-  background: #222;
-  border: 2px solid #ffcc66;
-  padding: 20px;
-  border-radius: 10px;
-  display: inline-block;
-}
-
-#username-input {
-  padding: 8px;
-  border-radius: 5px;
-  border: none;
-  width: 200px;
-  margin-bottom: 10px;
-}
-
-button {
-  background: #ffcc66;
-  border: none;
-  border-radius: 5px;
-  padding: 10px 20px;
-  cursor: pointer;
-  font-weight: bold;
-}
-
-button:hover {
-  background: #ffdd77;
+/* responsive */
+@media(max-width:900px){
+  main{grid-template-columns:1fr;align-items:center}
+  #cookie-wrap{width:300px;height:300px}
+  #cookie{width:180px;height:180px}
 }
