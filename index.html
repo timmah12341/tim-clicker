@@ -1,37 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Tim Clicker 🍪</title>
   <link rel="stylesheet" href="style.css" />
-  <script type="module" src="script.js"></script>
+  <!-- Firebase modules (CDN) -->
+  <script type="module" src="script.js" defer></script>
 </head>
 <body>
-  <div class="container">
-    <h1>🍪 Tim Clicker</h1>
+  <div id="app">
+    <div class="bg"></div>
 
-    <div id="username-section" class="popup">
-      <h2>Enter your name</h2>
-      <input type="text" id="username-input" placeholder="Your name..." />
-      <button id="start-btn">Start Game</button>
-    </div>
+    <header>
+      <h1>Tim Clicker 🍪</h1>
+      <div id="userbar">
+        <span id="playerLabel">Not logged</span>
+        <button id="changeNameBtn">Change name</button>
+      </div>
+    </header>
 
-    <div id="game" class="hidden">
-      <img id="cookie" src="cookie.png" alt="Cookie" />
-      <p id="cookies">Cookies: 0</p>
-      <p id="cps">CPS: 0</p>
-    </div>
+    <main>
+      <section id="game-area">
+        <div id="cookie-wrap">
+          <img id="cookie" src="cookie.png" alt="cookie" />
+          <div id="upgrades-orbit"></div>
+        </div>
 
-    <div id="upgrades" class="hidden">
-      <h2>💎 Upgrades</h2>
-      <div id="upgrade-list"></div>
-    </div>
+        <div id="stats">
+          <div class="stat">Cookies: <span id="cookies">0</span></div>
+          <div class="stat">CPS: <span id="cps">0</span></div>
+        </div>
+      </section>
 
-    <div id="leaderboard" class="hidden">
-      <h2>🏆 Leaderboard</h2>
-      <ul id="board"></ul>
-    </div>
+      <section id="shop">
+        <h2>Upgrades</h2>
+        <div id="shop-list"></div>
+      </section>
+
+      <section id="leaderboard">
+        <h2>🏆 Leaderboard</h2>
+        <ol id="board"></ol>
+      </section>
+    </main>
   </div>
+
+  <!-- Canvas for particle effects (absolute overlay) -->
+  <canvas id="particles"></canvas>
 </body>
 </html>
