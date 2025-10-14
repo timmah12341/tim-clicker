@@ -1,51 +1,182 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Tim Clicker 🍪</title>
-  <link rel="stylesheet" href="style.css" />
-  <!-- Firebase modules (CDN) -->
-  <script type="module" src="script.js" defer></script>
+  <style>
+    body {
+      background: radial-gradient(circle at center, #2e026d, #000);
+      color: #fff;
+      font-family: "Comic Sans MS", sans-serif;
+      text-align: center;
+      overflow-x: hidden;
+    }
+    h1 {
+      font-size: 3em;
+      margin-top: 20px;
+    }
+    #cookie {
+      width: 200px;
+      transition: transform 0.1s ease;
+      cursor: pointer;
+      margin-top: 30px;
+    }
+    #cookie:active {
+      transform: scale(0.9);
+    }
+    .upgrade {
+      display: inline-block;
+      margin: 10px;
+      animation: spin 4s linear infinite;
+    }
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    .upgrade img {
+      width: 70px;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+    #leaderboard {
+      margin-top: 40px;
+      background: rgba(255,255,255,0.1);
+      padding: 15px;
+      border-radius: 10px;
+      display: inline-block;
+      text-align: left;
+    }
+    input {
+      padding: 8px;
+      border-radius: 5px;
+      border: none;
+      margin-top: 10px;
+    }
+  </style>
 </head>
 <body>
-  <div id="app">
-    <div class="bg"></div>
+  <h1>🍪 Tim Clicker</h1>
+  <p id="username-section">
+    <input id="nameInput" placeholder="Enter your name" />
+    <button id="saveName">Start!</button>
+  </p>
+  <div id="game" style="display:none;">
+    <img src="./cookie.png" id="cookie" alt="cookie" />
+    <h2 id="cookies">Cookies: 0</h2>
+    <h3 id="cps">CPS: 0</h3>
 
-    <header>
-      <h1>Tim Clicker 🍪</h1>
-      <div id="userbar">
-        <span id="playerLabel">Not logged</span>
-        <button id="changeNameBtn">Change name</button>
-      </div>
-    </header>
+    <div id="upgrades"></div>
 
-    <main>
-      <section id="game-area">
-        <div id="cookie-wrap">
-          <img id="cookie" src="cookie.png" alt="cookie" />
-          <div id="upgrades-orbit"></div>
-        </div>
-
-        <div id="stats">
-          <div class="stat">Cookies: <span id="cookies">0</span></div>
-          <div class="stat">CPS: <span id="cps">0</span></div>
-        </div>
-      </section>
-
-      <section id="shop">
-        <h2>Upgrades</h2>
-        <div id="shop-list"></div>
-      </section>
-
-      <section id="leaderboard">
-        <h2>🏆 Leaderboard</h2>
-        <ol id="board"></ol>
-      </section>
-    </main>
+    <h2>🏆 Leaderboard</h2>
+    <div id="leaderboard">Loading...</div>
   </div>
 
-  <!-- Canvas for particle effects (absolute overlay) -->
-  <canvas id="particles"></canvas>
+  <script type="module">
+    import { db, ref, set, get, update, onValue } from "./firebase.js";
+
+    const cookie = document.getElementById("cookie");
+    const cookiesEl = document.getElementById("cookies");
+    const cpsEl = document.getElementById("cps");
+    const upgradesEl = document.getElementById("upgrades");
+    const leaderboardEl = document.getElementById("leaderboard");
+    const nameInput = document.getElementById("nameInput");
+    const saveNameBtn = document.getElementById("saveName");
+    const game = document.getElementById("game");
+    const usernameSection = document.getElementById("username-section");
+
+    let cookies = 0;
+    let cps = 0;
+    let username = localStorage.getItem("timclicker_name");
+
+    const upgrades = [
+      { id: 1, name: "Cursor", cost: 50, cps: 1, icon: "upgrade1.png" },
+      { id: 2, name: "Grandma", cost: 250, cps: 5, icon: "upgrade2.png" },
+      { id: 3, name: "Factory", cost: 1000, cps: 20, icon: "upgrade3.png" },
+      { id: 4, name: "Portal", cost: 5000, cps: 100, icon: "upgrade4.png" },
+    ];
+
+    if (username) startGame();
+
+    saveNameBtn.onclick = () => {
+      const name = nameInput.value.trim();
+      if (name) {
+        localStorage.setItem("timclicker_name", name);
+        username = name;
+        startGame();
+      }
+    };
+
+    function startGame() {
+      usernameSection.style.display = "none";
+      game.style.display = "block";
+      loadData();
+      renderUpgrades();
+      setInterval(() => {
+        cookies += cps;
+        updateDisplay();
+        saveData();
+      }, 1000);
+    }
+
+    function clickCookie() {
+      cookies++;
+      updateDisplay();
+      saveData();
+    }
+
+    cookie.addEventListener("click", clickCookie);
+
+    function renderUpgrades() {
+      upgradesEl.innerHTML = "";
+      upgrades.forEach((u) => {
+        const div = document.createElement("div");
+        div.className = "upgrade";
+        div.innerHTML = `<img src="${u.icon}" title="${u.name} - ${u.cost} cookies" />`;
+        div.onclick = () => buyUpgrade(u);
+        upgradesEl.appendChild(div);
+      });
+    }
+
+    function buyUpgrade(u) {
+      if (cookies >= u.cost) {
+        cookies -= u.cost;
+        cps += u.cps;
+        u.cost = Math.round(u.cost * 1.5);
+        updateDisplay();
+        saveData();
+      }
+    }
+
+    function updateDisplay() {
+      cookiesEl.textContent = `Cookies: ${cookies}`;
+      cpsEl.textContent = `CPS: ${cps}`;
+    }
+
+    function saveData() {
+      set(ref(db, "players/" + username), { name: username, cookies, cps });
+    }
+
+    function loadData() {
+      get(ref(db, "players/" + username)).then((snapshot) => {
+        if (snapshot.exists()) {
+          const data = snapshot.val();
+          cookies = data.cookies || 0;
+          cps = data.cps || 0;
+          updateDisplay();
+        }
+      });
+    }
+
+    onValue(ref(db, "players"), (snapshot) => {
+      if (snapshot.exists()) {
+        const players = Object.values(snapshot.val());
+        players.sort((a, b) => b.cookies - a.cookies);
+        leaderboardEl.innerHTML = players
+          .map((p, i) => `<p>${i + 1}. ${p.name} — ${p.cookies} 🍪</p>`)
+          .join("");
+      }
+    });
+  </script>
 </body>
 </html>
