@@ -1,0 +1,100 @@
+body {
+  background: radial-gradient(circle at center, #222, #111);
+  color: #fefefe;
+  font-family: 'Poppins', sans-serif;
+  text-align: center;
+  margin: 0;
+  padding: 20px;
+}
+
+h1 {
+  font-size: 2.5em;
+  color: #ffcc66;
+  text-shadow: 0 0 10px #ffcc66;
+  margin-bottom: 10px;
+}
+
+.hidden {
+  display: none;
+}
+
+#cookie {
+  width: 200px;
+  height: 200px;
+  cursor: pointer;
+  transition: transform 0.1s ease;
+}
+
+#cookie:active {
+  transform: scale(0.9);
+}
+
+#cookies, #cps {
+  font-size: 1.4em;
+  margin: 10px 0;
+}
+
+#upgrades {
+  margin-top: 30px;
+}
+
+.upgrade {
+  background: #333;
+  border: 2px solid #ffcc66;
+  border-radius: 10px;
+  padding: 10px;
+  margin: 10px auto;
+  width: 250px;
+  cursor: pointer;
+  transition: transform 0.2s, background 0.3s;
+}
+
+.upgrade:hover {
+  background: #444;
+  transform: scale(1.05);
+}
+
+#leaderboard {
+  margin-top: 40px;
+}
+
+#board {
+  list-style: none;
+  padding: 0;
+}
+
+#board li {
+  margin: 5px 0;
+  background: #222;
+  border-radius: 5px;
+  padding: 5px;
+}
+
+.popup {
+  background: #222;
+  border: 2px solid #ffcc66;
+  padding: 20px;
+  border-radius: 10px;
+  display: inline-block;
+}
+
+#username-input {
+  padding: 8px;
+  border-radius: 5px;
+  border: none;
+  width: 200px;
+  margin-bottom: 10px;
+}
+
+button {
+  background: #ffcc66;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+button:hover {
+  background: #ffdd77;
+}
