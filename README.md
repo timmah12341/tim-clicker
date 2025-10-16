@@ -1,4 +1,4 @@
-# Tim Cliker!
+# Tim Clicker!
 
 Tim Clicker is a game about nothing. Just Tim. And Tim. And Tim
 
