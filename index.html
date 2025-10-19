@@ -3,74 +3,111 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Tim Clicker 🍪</title>
+  <title>🍪 Tim Clicker Deluxe</title>
   <style>
     body {
-      background: radial-gradient(circle at center, #2e026d, #000);
+      background: linear-gradient(135deg, #1b003a, #370061, #12002c);
       color: #fff;
-      font-family: "Comic Sans MS", sans-serif;
       text-align: center;
-      overflow-x: hidden;
+      font-family: "Poppins", sans-serif;
+      overflow: hidden;
+      margin: 0;
     }
     h1 {
       font-size: 3em;
       margin-top: 20px;
+      text-shadow: 0 0 10px #ffcc00;
     }
     #cookie {
       width: 200px;
-      transition: transform 0.1s ease;
+      transition: transform 0.1s;
       cursor: pointer;
-      margin-top: 30px;
     }
     #cookie:active {
       transform: scale(0.9);
     }
-    .upgrade {
-      display: inline-block;
-      margin: 10px;
-      animation: spin 4s linear infinite;
+    .orbit {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform-style: preserve-3d;
+      animation: rotateOrbit 20s linear infinite;
     }
-    @keyframes spin {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
-    }
-    .upgrade img {
+    .orbit img {
       width: 70px;
       border-radius: 50%;
       cursor: pointer;
+      transition: transform 0.3s;
+    }
+    .orbit img:hover {
+      transform: scale(1.1);
+    }
+    @keyframes rotateOrbit {
+      from { transform: rotate(0deg) translateX(200px) rotate(0deg); }
+      to { transform: rotate(360deg) translateX(200px) rotate(-360deg); }
     }
     #leaderboard {
-      margin-top: 40px;
       background: rgba(255,255,255,0.1);
-      padding: 15px;
       border-radius: 10px;
-      display: inline-block;
+      padding: 10px;
+      width: 250px;
+      margin: 20px auto;
       text-align: left;
     }
-    input {
-      padding: 8px;
-      border-radius: 5px;
+    button, input {
+      padding: 10px 15px;
       border: none;
-      margin-top: 10px;
+      border-radius: 8px;
+      margin: 5px;
+      font-size: 1em;
+    }
+    button {
+      background: #ffcc00;
+      color: #000;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    button:hover {
+      background: #ffaa00;
+    }
+    #musicToggle {
+      position: fixed;
+      bottom: 15px;
+      right: 15px;
+      background: #ffcc00;
+      color: #000;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      font-size: 1.2em;
     }
   </style>
 </head>
 <body>
-  <h1>🍪 Tim Clicker</h1>
-  <p id="username-section">
+  <h1> Tim Clicker :3</h1>
+
+  <div id="name-section">
     <input id="nameInput" placeholder="Enter your name" />
-    <button id="saveName">Start!</button>
-  </p>
+    <button id="startGame">Start</button>
+  </div>
+
   <div id="game" style="display:none;">
-    <img src="./cookie.png" id="cookie" alt="cookie" />
+    <h2 id="playerName"></h2>
+    <img src="./cookie.png" id="cookie" alt="Cookie" />
     <h2 id="cookies">Cookies: 0</h2>
     <h3 id="cps">CPS: 0</h3>
-
     <div id="upgrades"></div>
-
-    <h2>🏆 Leaderboard</h2>
-    <div id="leaderboard">Loading...</div>
+    <div id="leaderboard"><p>Loading leaderboard...</p></div>
   </div>
+
+  <button id="musicToggle">🎵</button>
+
+  <audio id="bgMusic" loop>
+    <source src="./music.mp3" type="audio/mpeg" />
+  </audio>
+  <audio id="clickSound">
+    <source src="./click.mp3" type="audio/mpeg" />
+  </audio>
 
   <script type="module">
     import { db, ref, set, get, update, onValue } from "./firebase.js";
@@ -81,37 +118,57 @@
     const upgradesEl = document.getElementById("upgrades");
     const leaderboardEl = document.getElementById("leaderboard");
     const nameInput = document.getElementById("nameInput");
-    const saveNameBtn = document.getElementById("saveName");
+    const startGameBtn = document.getElementById("startGame");
     const game = document.getElementById("game");
-    const usernameSection = document.getElementById("username-section");
+    const nameSection = document.getElementById("name-section");
+    const playerNameEl = document.getElementById("playerName");
+    const bgMusic = document.getElementById("bgMusic");
+    const clickSound = document.getElementById("clickSound");
+    const musicToggle = document.getElementById("musicToggle");
 
+    let username = localStorage.getItem("timclicker_name");
     let cookies = 0;
     let cps = 0;
-    let username = localStorage.getItem("timclicker_name");
 
     const upgrades = [
-      { id: 1, name: "Cursor", cost: 50, cps: 1, icon: "upgrade1.png" },
-      { id: 2, name: "Grandma", cost: 250, cps: 5, icon: "upgrade2.png" },
-      { id: 3, name: "Factory", cost: 1000, cps: 20, icon: "upgrade3.png" },
-      { id: 4, name: "Portal", cost: 5000, cps: 1000000, icon: "upgrade4.png" },
+      { name: "Cursor", cost: 50, cps: 1, icon: "upgrade1.png" },
+      { name: "Grandma", cost: 150, cps: 3, icon: "upgrade2.png" },
+      { name: "Factory", cost: 500, cps: 8, icon: "upgrade3.png" },
+      { name: "Portal", cost: 2000, cps: 20, icon: "upgrade4.png" },
+      { name: "Absolute Tim-ema", cost: 5000, cps: 50, icon: "upgrade5.png" },
+      { name: "Ball Guys Tim", cost: 10000, cps: 100, icon: "upgrade6.png" },
+      { name: "Floatieeee!", cost: 25000, cps: 200, icon: "upgrade7.png" },
+      { name: "Mega Mixer", cost: 40000, cps: 300, icon: "upgrade8.png" },
+      { name: "Tim Factory", cost: 80000, cps: 500, icon: "upgrade9.png" },
+      { name: "Galaxy Oven", cost: 150000, cps: 1000, icon: "upgrade10.png" },
     ];
 
     if (username) startGame();
 
-    saveNameBtn.onclick = () => {
+    startGameBtn.onclick = () => {
       const name = nameInput.value.trim();
-      if (name) {
-        localStorage.setItem("timclicker_name", name);
-        username = name;
-        startGame();
+      if (!name) return;
+      username = name;
+      localStorage.setItem("timclicker_name", name);
+      startGame();
+    };
+
+    musicToggle.onclick = () => {
+      if (bgMusic.paused) {
+        bgMusic.play();
+        musicToggle.textContent = "🔇";
+      } else {
+        bgMusic.pause();
+        musicToggle.textContent = "🎵";
       }
     };
 
     function startGame() {
-      usernameSection.style.display = "none";
+      nameSection.style.display = "none";
       game.style.display = "block";
-      loadData();
+      playerNameEl.textContent = username;
       renderUpgrades();
+      loadData();
       setInterval(() => {
         cookies += cps;
         updateDisplay();
@@ -119,22 +176,27 @@
       }, 1000);
     }
 
-    function clickCookie() {
+    cookie.onclick = () => {
       cookies++;
+      clickSound.currentTime = 0;
+      clickSound.play();
+      cookie.animate([{ transform: "scale(1.1)" }, { transform: "scale(1)" }], { duration: 100 });
       updateDisplay();
       saveData();
-    }
-
-    cookie.addEventListener("click", clickCookie);
+    };
 
     function renderUpgrades() {
       upgradesEl.innerHTML = "";
-      upgrades.forEach((u) => {
-        const div = document.createElement("div");
-        div.className = "upgrade";
-        div.innerHTML = `<img src="${u.icon}" title="${u.name} - ${u.cost} cookies" />`;
-        div.onclick = () => buyUpgrade(u);
-        upgradesEl.appendChild(div);
+      upgrades.forEach((u, i) => {
+        const orbit = document.createElement("div");
+        orbit.className = "orbit";
+        orbit.style.animationDelay = `${i * 2}s`;
+        const img = document.createElement("img");
+        img.src = u.icon;
+        img.title = `${u.name} (${u.cost} cookies)`;
+        img.onclick = () => buyUpgrade(u);
+        orbit.appendChild(img);
+        upgradesEl.appendChild(orbit);
       });
     }
 
@@ -142,7 +204,7 @@
       if (cookies >= u.cost) {
         cookies -= u.cost;
         cps += u.cps;
-        u.cost = Math.round(u.cost * 1.5);
+        u.cost = Math.round(u.cost * 1.25); // slower growth
         updateDisplay();
         saveData();
       }
@@ -158,9 +220,9 @@
     }
 
     function loadData() {
-      get(ref(db, "players/" + username)).then((snapshot) => {
-        if (snapshot.exists()) {
-          const data = snapshot.val();
+      get(ref(db, "players/" + username)).then((snap) => {
+        if (snap.exists()) {
+          const data = snap.val();
           cookies = data.cookies || 0;
           cps = data.cps || 0;
           updateDisplay();
@@ -168,9 +230,9 @@
       });
     }
 
-    onValue(ref(db, "players"), (snapshot) => {
-      if (snapshot.exists()) {
-        const players = Object.values(snapshot.val());
+    onValue(ref(db, "players"), (snap) => {
+      if (snap.exists()) {
+        const players = Object.values(snap.val());
         players.sort((a, b) => b.cookies - a.cookies);
         leaderboardEl.innerHTML = players
           .map((p, i) => `<p>${i + 1}. ${p.name} — ${p.cookies} 🍪</p>`)
