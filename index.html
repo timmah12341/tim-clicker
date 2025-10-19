@@ -1,244 +1,80 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title. Tim Clicker :3 </title>
-  <style>
-    body {
-      background: linear-gradient(135deg, #1b003a, #370061, #12002c);
-      color: #fff;
-      text-align: center;
-      font-family: "Poppins", sans-serif;
-      overflow: hidden;
-      margin: 0;
-    }
-    h1 {
-      font-size: 3em;
-      margin-top: 20px;
-      text-shadow: 0 0 10px #ffcc00;
-    }
-    #cookie {
-      width: 200px;
-      transition: transform 0.1s;
-      cursor: pointer;
-    }
-    #cookie:active {
-      transform: scale(0.9);
-    }
-    .orbit {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform-style: preserve-3d;
-      animation: rotateOrbit 20s linear infinite;
-    }
-    .orbit img {
-      width: 70px;
-      border-radius: 50%;
-      cursor: pointer;
-      transition: transform 0.3s;
-    }
-    .orbit img:hover {
-      transform: scale(1.1);
-    }
-    @keyframes rotateOrbit {
-      from { transform: rotate(0deg) translateX(200px) rotate(0deg); }
-      to { transform: rotate(360deg) translateX(200px) rotate(-360deg); }
-    }
-    #leaderboard {
-      background: rgba(255,255,255,0.1);
-      border-radius: 10px;
-      padding: 10px;
-      width: 250px;
-      margin: 20px auto;
-      text-align: left;
-    }
-    button, input {
-      padding: 10px 15px;
-      border: none;
-      border-radius: 8px;
-      margin: 5px;
-      font-size: 1em;
-    }
-    button {
-      background: #ffcc00;
-      color: #000;
-      cursor: pointer;
-      transition: 0.2s;
-    }
-    button:hover {
-      background: #ffaa00;
-    }
-    #musicToggle {
-      position: fixed;
-      bottom: 15px;
-      right: 15px;
-      background: #ffcc00;
-      color: #000;
-      border-radius: 50%;
-      width: 60px;
-      height: 60px;
-      font-size: 1.2em;
-    }
-  </style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Tim Clicker Deluxe</title>
+  <link rel="stylesheet" href="style.css" />
+  <script type="module" src="script.js" defer></script>
 </head>
 <body>
-  <h1> Tim Clicker :3</h1>
+  <div id="root">
+    <header class="topbar">
+      <h1>Tim Clicker Deluxe</h1>
+      <div class="top-right">
+        <span id="version">v2.0</span>
+        <button id="musicToggle" title="Toggle music">🔊</button>
+      </div>
+    </header>
 
-  <div id="name-section">
-    <input id="nameInput" placeholder="Enter your name" />
-    <button id="startGame">Start</button>
+    <main class="stage">
+      <section class="left-panel">
+        <div id="playerPanel" class="panel">
+          <label for="nameInput">Name (saved per device)</label>
+          <input id="nameInput" placeholder="Enter name..." />
+          <button id="saveNameBtn">Save & Start</button>
+        </div>
+
+        <div id="gamePanel" class="panel hidden">
+          <div id="cookieWrap">
+            <img id="cookie" src="cookie.png" alt="cookie" />
+            <div id="orbitContainer"></div>
+          </div>
+
+          <div class="stats">
+            <div>Cookies: <span id="cookies">0</span></div>
+            <div>CPS: <span id="cps">0</span></div>
+          </div>
+
+          <div class="actions">
+            <button id="enterUnderwater" title="Underwater level">Enter Underwater</button>
+            <button id="openTimu">Open Timu (Shop)</button>
+            <button id="openMinigames">Minigames</button>
+          </div>
+
+          <div id="minigamePanel" class="panel hidden">
+            <h3>Minigames</h3>
+            <button id="launchClickRush">Click Rush (10s)</button>
+            <button id="launchTimJump">Tim Jump (simple)</button>
+            <div id="minigameArea"></div>
+          </div>
+        </div>
+      </section>
+
+      <aside class="right-panel">
+        <div id="shopPanel" class="panel hidden">
+          <h3>Timu (Shop)</h3>
+          <div id="shopList"></div>
+        </div>
+
+        <div id="skinsPanel" class="panel hidden">
+          <h3>Skins</h3>
+          <div id="skinsList"></div>
+        </div>
+
+        <div id="leaderPanel" class="panel hidden">
+          <h3>Leaderboard</h3>
+          <ol id="leaderboard"></ol>
+        </div>
+      </aside>
+    </main>
+
+    <footer class="footer">
+      <small>Made by Tim — Timu Expansion Pack</small>
+    </footer>
   </div>
 
-  <div id="game" style="display:none;">
-    <h2 id="playerName"></h2>
-    <img src="./cookie.png" id="cookie" alt="Cookie" />
-    <h2 id="cookies">Cookies: 0</h2>
-    <h3 id="cps">CPS: 0</h3>
-    <div id="upgrades"></div>
-    <div id="leaderboard"><p>Loading leaderboard...</p></div>
-  </div>
-
-  <button id="musicToggle">🎵</button>
-
-  <audio id="bgMusic" loop>
-    <source src="./music.mp3" type="audio/mpeg" />
-  </audio>
-  <audio id="clickSound">
-    <source src="./click.mp3" type="audio/mpeg" />
-  </audio>
-
-  <script type="module">
-    import { db, ref, set, get, update, onValue } from "./firebase.js";
-
-    const cookie = document.getElementById("cookie");
-    const cookiesEl = document.getElementById("cookies");
-    const cpsEl = document.getElementById("cps");
-    const upgradesEl = document.getElementById("upgrades");
-    const leaderboardEl = document.getElementById("leaderboard");
-    const nameInput = document.getElementById("nameInput");
-    const startGameBtn = document.getElementById("startGame");
-    const game = document.getElementById("game");
-    const nameSection = document.getElementById("name-section");
-    const playerNameEl = document.getElementById("playerName");
-    const bgMusic = document.getElementById("bgMusic");
-    const clickSound = document.getElementById("clickSound");
-    const musicToggle = document.getElementById("musicToggle");
-
-    let username = localStorage.getItem("timclicker_name");
-    let cookies = 0;
-    let cps = 0;
-
-    const upgrades = [
-      { name: "Cursor", cost: 50, cps: 1, icon: "upgrade1.png" },
-      { name: "Grandma", cost: 150, cps: 3, icon: "upgrade2.png" },
-      { name: "Factory", cost: 500, cps: 8, icon: "upgrade3.png" },
-      { name: "Portal", cost: 2000, cps: 20, icon: "upgrade4.png" },
-      { name: "Absolute Tim-ema", cost: 5000, cps: 50, icon: "upgrade5.png" },
-      { name: "Ball Guys Tim", cost: 10000, cps: 100, icon: "upgrade6.png" },
-      { name: "Floatieeee!", cost: 25000, cps: 200, icon: "upgrade7.png" },
-      { name: "Mega Mixer", cost: 40000, cps: 300, icon: "upgrade8.png" },
-      { name: "Tim Factory", cost: 80000, cps: 500, icon: "upgrade9.png" },
-      { name: "Galaxy Oven", cost: 150000, cps: 1000, icon: "upgrade10.png" },
-    ];
-
-    if (username) startGame();
-
-    startGameBtn.onclick = () => {
-      const name = nameInput.value.trim();
-      if (!name) return;
-      username = name;
-      localStorage.setItem("timclicker_name", name);
-      startGame();
-    };
-
-    musicToggle.onclick = () => {
-      if (bgMusic.paused) {
-        bgMusic.play();
-        musicToggle.textContent = "🔇";
-      } else {
-        bgMusic.pause();
-        musicToggle.textContent = "🎵";
-      }
-    };
-
-    function startGame() {
-      nameSection.style.display = "none";
-      game.style.display = "block";
-      playerNameEl.textContent = username;
-      renderUpgrades();
-      loadData();
-      setInterval(() => {
-        cookies += cps;
-        updateDisplay();
-        saveData();
-      }, 1000);
-    }
-
-    cookie.onclick = () => {
-      cookies++;
-      clickSound.currentTime = 0;
-      clickSound.play();
-      cookie.animate([{ transform: "scale(1.1)" }, { transform: "scale(1)" }], { duration: 100 });
-      updateDisplay();
-      saveData();
-    };
-
-    function renderUpgrades() {
-      upgradesEl.innerHTML = "";
-      upgrades.forEach((u, i) => {
-        const orbit = document.createElement("div");
-        orbit.className = "orbit";
-        orbit.style.animationDelay = `${i * 2}s`;
-        const img = document.createElement("img");
-        img.src = u.icon;
-        img.title = `${u.name} (${u.cost} cookies)`;
-        img.onclick = () => buyUpgrade(u);
-        orbit.appendChild(img);
-        upgradesEl.appendChild(orbit);
-      });
-    }
-
-    function buyUpgrade(u) {
-      if (cookies >= u.cost) {
-        cookies -= u.cost;
-        cps += u.cps;
-        u.cost = Math.round(u.cost * 1.25); // slower growth
-        updateDisplay();
-        saveData();
-      }
-    }
-
-    function updateDisplay() {
-      cookiesEl.textContent = `Cookies: ${cookies}`;
-      cpsEl.textContent = `CPS: ${cps}`;
-    }
-
-    function saveData() {
-      set(ref(db, "players/" + username), { name: username, cookies, cps });
-    }
-
-    function loadData() {
-      get(ref(db, "players/" + username)).then((snap) => {
-        if (snap.exists()) {
-          const data = snap.val();
-          cookies = data.cookies || 0;
-          cps = data.cps || 0;
-          updateDisplay();
-        }
-      });
-    }
-
-    onValue(ref(db, "players"), (snap) => {
-      if (snap.exists()) {
-        const players = Object.values(snap.val());
-        players.sort((a, b) => b.cookies - a.cookies);
-        leaderboardEl.innerHTML = players
-          .map((p, i) => `<p>${i + 1}. ${p.name} — ${p.cookies} 🍪</p>`)
-          .join("");
-      }
-    });
-  </script>
+  <!-- canvas for particles overlay -->
+  <canvas id="fxCanvas" class="fx-canvas"></canvas>
 </body>
 </html>
