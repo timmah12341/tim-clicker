@@ -1,16 +1,16 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Tim Clicker Deluxe</title>
-  <link rel="stylesheet" href="style.css" />
-  <script type="module" src="script.js" defer></script>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Tim Clicker Deluxe (HTML)</title>
+<link rel="stylesheet" href="style.css" />
+<script type="module" src="script.js" defer></script>
 </head>
 <body>
   <div id="root">
     <header class="topbar">
-      <h1>Tim Clicker Deluxe</h1>
+      <h1>Tim Clicker — Timu Expansion</h1>
       <div class="top-right">
         <span id="version">v2.0</span>
         <button id="musicToggle" title="Toggle music">🔊</button>
@@ -20,8 +20,8 @@
     <main class="stage">
       <section class="left-panel">
         <div id="playerPanel" class="panel">
-          <label for="nameInput">Name (saved per device)</label>
-          <input id="nameInput" placeholder="Enter name..." />
+          <label for="nameInput">Enter your name (saved per device)</label>
+          <input id="nameInput" placeholder="Your name..." />
           <button id="saveNameBtn">Save & Start</button>
         </div>
 
@@ -37,7 +37,7 @@
           </div>
 
           <div class="actions">
-            <button id="enterUnderwater" title="Underwater level">Enter Underwater</button>
+            <button id="enterUnderwater">Enter Underwater</button>
             <button id="openTimu">Open Timu (Shop)</button>
             <button id="openMinigames">Minigames</button>
           </div>
@@ -45,7 +45,7 @@
           <div id="minigamePanel" class="panel hidden">
             <h3>Minigames</h3>
             <button id="launchClickRush">Click Rush (10s)</button>
-            <button id="launchTimJump">Tim Jump (simple)</button>
+            <button id="launchTimJump">Tim Jump</button>
             <div id="minigameArea"></div>
           </div>
         </div>
@@ -74,7 +74,6 @@
     </footer>
   </div>
 
-  <!-- canvas for particles overlay -->
   <canvas id="fxCanvas" class="fx-canvas"></canvas>
 </body>
 </html>
