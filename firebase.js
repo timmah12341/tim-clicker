@@ -6,13 +6,19 @@ import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gsta
 
 // <-- REPLACE with your Firebase project's config (safe client values) -->
 const firebaseConfig = {
-  apiKey: "REPLACE_ME",
-  authDomain: "REPLACE_ME",
-  databaseURL: "REPLACE_ME",
-  projectId: "REPLACE_ME",
-  storageBucket: "REPLACE_ME",
-  messagingSenderId: "REPLACE_ME",
-  appId: "REPLACE_ME"
+  apiKey: "AIzaSyBZDGbuenDWIE8O0hjCa8h98n1os-8MZNs",
+  authDomain: "tim-clicker.firebaseapp.com",
+  databaseURL: "https://tim-clicker-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "tim-clicker",
+  storageBucket: "tim-clicker.firebasestorage.app",
+  messagingSenderId: "493561136507",
+  appId: "1:493561136507:web:0a842da88e6a764624e9de",
+  measurementId: "G-FTKCVMZH0Z"
+};
+
+const app = initializeApp(firebaseConfig);
+export const db = getDatabase(app);
+
 };
 
 const app = initializeApp(firebaseConfig);
