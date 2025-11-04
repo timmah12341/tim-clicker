@@ -52,3 +52,18 @@ button:active{transform:translateY(2px)}
 #bgParticles{position:fixed;left:0;top:0;pointer-events:none;z-index:5}
 .wide{width:100%;padding:10px;margin-bottom:8px}
 .inner{padding:12px}
+html, body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  height: 100%;
+}
+
+:root {
+  --bg-color: #0b0014;
+}
+
+body {
+  background: radial-gradient(circle at 30% 30%, #35005b, var(--bg-color));
+}
+
