@@ -7,62 +7,73 @@
   <link rel="icon" href="cookie.png" type="image/png">
   <link rel="stylesheet" href="style.css">
   <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline' 'unsafe-eval' data: blob:;">
+  <script type="module" src="firebase.js" defer></script>
   <script type="module" src="script.js" defer></script>
 </head>
 <body>
   <div id="app">
-
     <header class="topbar">
       <h1 id="siteTitle">Tim Clicker :3</h1>
       <div class="top-controls">
-        <button id="musicToggle" title="Toggle music">🔊</button>
-        <button id="openMultiplayer">Multimplayers</button>
-        <button id="openTimupass">Timupass</button>
+        <button id="musicToggle">🔊</button>
+        <button id="openLobbyBtn">Lobby</button>
+        <button id="openPassBtn">Timupass</button>
       </div>
     </header>
 
     <main class="main-area">
-      <aside class="left-col panel">
-        <div id="loginPanel">
-          <label>Enter name</label>
-          <input id="nameInput" placeholder="Your name..." />
-          <div class="row">
-            <button id="createRoomBtn">Create Room</button>
-            <input id="roomInput" placeholder="Room code" maxlength="6" />
-            <button id="joinRoomBtn">Join Room</button>
-          </div>
-          <div id="status">Not connected</div>
-        </div>
-
-        <div id="gamePanel" class="hidden">
-          <div class="player-header">
-            <div id="playerLabel">—</div>
-            <div>Tims: <span id="tims">0</span></div>
-            <div>CPS: <span id="cps">0</span></div>
+      <section class="left-col panel">
+        <div id="singlePanel">
+          <div id="loginBlock" class="panel inner">
+            <label for="nameInput">Name</label>
+            <input id="nameInput" placeholder="Your name..." />
+            <div class="row">
+              <button id="startSoloBtn">Start Solo</button>
+              <button id="openMultBtn">Join Multiplayer</button>
+            </div>
+            <div id="infoText">Play solo or join rooms with friends.</div>
           </div>
 
-          <div id="playStage">
-            <div id="bgImageHolder"></div>
-            <div id="multiCanvas">
-              <div id="localWrap">
-                <img id="localTim" src="cookie.png" alt="Tim" />
-                <div id="orbitContainer"></div>
+          <div id="gamePanel" class="panel inner hidden">
+            <div class="playerHeader"><span id="playerLabel">—</span><span>Tims: <b id="tims">0</b></span><span>CPS: <b id="cps">0</b></span></div>
+            <div id="playStage">
+              <div id="bgImageHolder"></div>
+              <div id="multiCanvas">
+                <div id="localWrap">
+                  <img id="localTim" src="cookie.png" alt="Tim" />
+                  <div id="orbitContainer"></div>
+                </div>
+                <div id="othersContainer"></div>
               </div>
-              <div id="othersContainer"></div>
+            </div>
+            <div class="controls-row">
+              <button id="openShopBtn">Timu (Shop)</button>
+              <button id="openMinigamesBtn">Minigames</button>
             </div>
           </div>
-
-          <div class="controls-row">
-            <button id="openShop">Timu (Shop)</button>
-            <button id="openMinigames">Minigames</button>
-          </div>
         </div>
-      </aside>
+      </section>
 
       <aside class="right-col panel">
         <div id="shopPanel" class="subpanel hidden">
           <h3>Timu Shop</h3>
           <div id="shopList" class="shop-grid"></div>
+        </div>
+
+        <div id="lobbyPanel" class="subpanel hidden">
+          <h3>Lobby</h3>
+          <div id="createJoin">
+            <input id="roomInput" placeholder="Room code (or keep blank)" maxlength="6" />
+            <button id="createRoomBtn">Create Room</button>
+            <button id="joinRoomBtn">Join Room</button>
+          </div>
+          <div id="roomStatus">Not in a room</div>
+          <div id="playersList"></div>
+          <div id="chatPanel">
+            <div id="chatLog"></div>
+            <input id="chatInput" placeholder="Say something..." />
+            <button id="chatSend">Send</button>
+          </div>
         </div>
 
         <div id="passPanel" class="subpanel hidden">
@@ -73,15 +84,15 @@
         </div>
 
         <div id="leaderPanel" class="subpanel">
-          <h3>Leaderboard (Room)</h3>
+          <h3>Global Leaderboard</h3>
           <ol id="leaderboard"></ol>
         </div>
       </aside>
     </main>
 
-    <footer class="footer">Tim Clicker :3 — Multiplayer demo</footer>
+    <footer class="footer">Tim Clicker :3 — Multiplayer</footer>
 
-    <!-- In-game popup -->
+    <!-- Popup -->
     <div id="popupOverlay" class="popup hidden">
       <div class="popup-box">
         <h3 id="popupTitle">Message</h3>
