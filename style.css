@@ -1,52 +1,43 @@
-/* style.css - multiplayer package */
-:root{--accent:#d77bff;--bg1:#070010}
-*{box-sizing:border-box;font-family:Inter,system-ui,Segoe UI,Roboto,"Poppins",sans-serif}
-html,body{height:100%;margin:0;background:linear-gradient(135deg,var(--bg1),#12001a);color:#fff;overflow:hidden}
-body{background-image: url('BgBg.png'); background-size: cover; background-position: center;}
-
-/* topbar */
-.topbar{display:flex;justify-content:space-between;align-items:center;padding:12px;background:rgba(0,0,0,0.35);backdrop-filter:blur(4px)}
-.topbar h1{color:var(--accent);margin:0;text-shadow:0 6px 18px rgba(155,92,255,0.08)}
-
-/* layout */
-.main-area{display:flex;gap:12px;padding:12px;height:calc(100% - 86px)}
-.left-col{flex:1;display:flex;flex-direction:column;gap:12px}
-.right-col{width:380px;display:flex;flex-direction:column;gap:12px}
-.panel{background:rgba(0,0,0,0.35);padding:12px;border-radius:12px;border:1px solid rgba(160,32,240,0.06)}
-
-/* game stage */
-#playStage{position:relative;height:420px;border-radius:12px;overflow:hidden;background:linear-gradient(180deg, rgba(10,0,30,0.2), rgba(0,0,0,0.2));display:flex;align-items:center;justify-content:center}
-#bgImageHolder{position:absolute;inset:0;opacity:0.18;pointer-events:none;background-size:cover;background-position:center}
-#multiCanvas{position:relative;width:100%;height:100%;display:flex;align-items:center;justify-content:center}
-#localWrap{position:relative;z-index:50}
-#localTim{width:160px;height:160px;border-radius:50%;cursor:pointer;filter:drop-shadow(0 10px 30px rgba(215,123,255,0.12))}
+/* Tim Clicker Timu Spin - style.css */
+:root{
+  --bg:#070010; --panel: rgba(255,255,255,0.03); --accent:#d77bff;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Arial;background:radial-gradient(800px 400px at 10% 10%, rgba(155,92,255,0.04), transparent), linear-gradient(135deg,var(--bg),#120021);color:#eee}
+#app{max-width:1100px;margin:28px auto;padding:12px}
+.topbar{display:flex;justify-content:space-between;align-items:center;padding:8px 12px}
+.topbar h1{color:var(--accent);text-shadow:0 8px 30px rgba(155,92,255,0.06)}
+.main{display:flex;gap:18px;margin-top:12px}
+.left{flex:1}
+.right{width:360px}
+.panel{background:var(--panel);padding:12px;border-radius:12px;box-shadow:0 10px 40px rgba(0,0,0,0.6)}
+.panel-inner{padding:12px}
+.hidden{display:none}
+.info-row{display:flex;gap:12px;justify-content:space-between;padding:6px 0;color:var(--accent)}
+#playArea{display:flex;justify-content:center;padding:18px}
+#timWrap{position:relative;width:320px;height:320px;display:flex;align-items:center;justify-content:center}
+#timImg{width:220px;height:220px;border-radius:50%;cursor:pointer;transition:transform .08s;box-shadow:0 30px 80px rgba(155,92,255,0.06)}
 #orbitContainer{position:absolute;inset:0;pointer-events:none}
-.otherPlayer{position:absolute; width:90px; height:90px; transform:translate(-50%,-50%); text-align:center; z-index:40}
-.otherPlayer img{width:90px;height:90px;border-radius:50%;filter:drop-shadow(0 6px 18px rgba(0,0,0,0.6))}
+.actions{display:flex;gap:8px;justify-content:center;margin-top:12px}
+button{background:linear-gradient(90deg,var(--accent),#9b5cff);border:none;padding:10px 12px;border-radius:10px;color:#000;font-weight:700;cursor:pointer}
+.footer{text-align:center;margin-top:12px;color:#ccc}
 
-/* shop */
-.shop-grid{display:flex;flex-direction:column;gap:8px;max-height:320px;overflow:auto;padding-right:6px}
-.shop-item{display:flex;justify-content:space-between;align-items:center;padding:8px;background:rgba(255,255,255,0.02);border-radius:8px}
-
-/* lobby/chat */
-#chatPanel{margin-top:8px;display:flex;flex-direction:column;gap:6px}
-#chatLog{height:160px;overflow:auto;background:rgba(0,0,0,0.2);padding:8px;border-radius:8px}
-
-/* timupass */
-#passProgress{height:12px;background:rgba(255,255,255,0.04);border-radius:8px;overflow:hidden;margin:8px 0}
-#passBar{height:100%;width:0;background:linear-gradient(90deg,#ffb3ff,#ffd6ff)}
+/* modal spin */
+.modal{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(10,0,20,0.7);z-index:999}
+.modal-box{background:linear-gradient(145deg,#2b003e,#13001a);padding:16px;border-radius:12px;border:2px solid #a020f0;min-width:420px;text-align:center}
+.wheel{position:relative;margin:6px auto;width:400px;height:400px}
+#wheelCanvas{border-radius:50%;box-shadow:0 20px 60px rgba(0,0,0,0.6)}
+#wheelPointer{position:absolute;left:50%;transform:translateX(-50%);top:-18px;font-size:28px;color:var(--accent)}
+.spin-controls{display:flex;gap:8px;justify-content:center;align-items:center;margin-top:10px}
+#buyGoldenBtn{background:linear-gradient(90deg,#ffd700,#ffdd66);color:#000}
 
 /* popup */
-.popup{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(10,0,20,0.7);z-index:999}
-.popup-box{background:linear-gradient(145deg,#3b0069,#1e0034);padding:20px;border-radius:10px;border:2px solid #a020f0}
-.hidden{display:none}
+.popup{position:fixed;left:50%;top:20%;transform:translateX(-50%);background:#19002b;padding:12px;border-radius:10px;border:2px solid #a020f0;z-index:1000}
+#popup button{margin-top:8px}
 
-/* tequilla wobble */
-.tequilla-wobble{animation:wobble 1s infinite;filter:hue-rotate(0deg) saturate(140%)}
-@keyframes wobble{0%{transform:translateX(0) rotate(0)}50%{transform:translateX(6px) rotate(1deg)}100%{transform:translateX(0) rotate(0)}}
+/* orbit items */
+.orbit-item{position:absolute;width:56px;height:56px;border-radius:50%;transform-origin:center;animation:spin linear infinite}
+.orbit-item img{width:100%;height:100%;border-radius:50%}
 
-/* misc */
-.row{display:flex;gap:8px}
-.controls-row{display:flex;gap:8px;justify-content:center;margin-top:12px}
-.playerHeader{display:flex;justify-content:space-between;gap:10px;margin-bottom:8px}
-.button{background:linear-gradient(90deg,#7f00ff,#e100ff);padding:8px;border-radius:8px;border:none;color:#fff;cursor:pointer}
+/* small responsive */
+@media(max-width:900px){ .main{flex-direction:column} .right{width:100%} .modal-box{min-width:320px} }

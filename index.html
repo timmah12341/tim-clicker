@@ -1,105 +1,87 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Tim Clicker :3 — Multiplayer</title>
-  <link rel="icon" href="cookie.png" type="image/png">
-  <link rel="stylesheet" href="style.css">
-  <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline' 'unsafe-eval' data: blob:;">
-  <script type="module" src="firebase.js" defer></script>
-  <script type="module" src="script.js" defer></script>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Tim Clicker :3 — Timu Spin</title>
+<link rel="icon" href="favicon.png" type="image/png">
+<link rel="stylesheet" href="style.css">
+<script src="script.js" defer></script>
 </head>
 <body>
   <div id="app">
     <header class="topbar">
-      <h1 id="siteTitle">Tim Clicker :3</h1>
-      <div class="top-controls">
-        <button id="musicToggle">🔊</button>
-        <button id="openLobbyBtn">Lobby</button>
-        <button id="openPassBtn">Timupass</button>
+      <h1>Tim Clicker :3</h1>
+      <div class="controls">
+        <button id="musicToggle" title="Toggle music">🔊</button>
       </div>
     </header>
 
-    <main class="main-area">
-      <section class="left-col panel">
-        <div id="singlePanel">
-          <div id="loginBlock" class="panel inner">
-            <label for="nameInput">Name</label>
-            <input id="nameInput" placeholder="Your name..." />
-            <div class="row">
-              <button id="startSoloBtn">Start Solo</button>
-              <button id="openMultBtn">Join Multiplayer</button>
-            </div>
-            <div id="infoText">Play solo or join rooms with friends.</div>
+    <main class="main">
+      <section class="left panel">
+        <div id="loginPanel" class="panel-inner">
+          <label for="nameInput">Enter your name</label>
+          <input id="nameInput" placeholder="Your name..." />
+          <button id="startBtn">Save & Start</button>
+        </div>
+
+        <div id="gamePanel" class="hidden panel-inner">
+          <div class="info-row">
+            <div>Player: <strong id="playerName">—</strong></div>
+            <div>Tims: <strong id="tims">0</strong></div>
+            <div>CPS: <strong id="cps">0</strong></div>
           </div>
 
-          <div id="gamePanel" class="panel inner hidden">
-            <div class="playerHeader"><span id="playerLabel">—</span><span>Tims: <b id="tims">0</b></span><span>CPS: <b id="cps">0</b></span></div>
-            <div id="playStage">
-              <div id="bgImageHolder"></div>
-              <div id="multiCanvas">
-                <div id="localWrap">
-                  <img id="localTim" src="cookie.png" alt="Tim" />
-                  <div id="orbitContainer"></div>
-                </div>
-                <div id="othersContainer"></div>
-              </div>
+          <div id="playArea">
+            <div id="timWrap">
+              <img id="timImg" src="cookie.png" alt="Tim" />
+              <div id="orbitContainer"></div>
             </div>
-            <div class="controls-row">
-              <button id="openShopBtn">Timu (Shop)</button>
-              <button id="openMinigamesBtn">Minigames</button>
-            </div>
+          </div>
+
+          <div class="actions">
+            <button id="openShop">Timu Shop</button>
+            <button id="openMinigames">Minigames</button>
+            <button id="openSpin">Timu Spin (🎰)</button>
           </div>
         </div>
       </section>
 
-      <aside class="right-col panel">
-        <div id="shopPanel" class="subpanel hidden">
+      <aside class="right panel">
+        <div id="shopPanel" class="panel-inner hidden">
           <h3>Timu Shop</h3>
-          <div id="shopList" class="shop-grid"></div>
+          <div id="shopList"></div>
         </div>
 
-        <div id="lobbyPanel" class="subpanel hidden">
-          <h3>Lobby</h3>
-          <div id="createJoin">
-            <input id="roomInput" placeholder="Room code (or keep blank)" maxlength="6" />
-            <button id="createRoomBtn">Create Room</button>
-            <button id="joinRoomBtn">Join Room</button>
-          </div>
-          <div id="roomStatus">Not in a room</div>
-          <div id="playersList"></div>
-          <div id="chatPanel">
-            <div id="chatLog"></div>
-            <input id="chatInput" placeholder="Say something..." />
-            <button id="chatSend">Send</button>
-          </div>
-        </div>
-
-        <div id="passPanel" class="subpanel hidden">
-          <h3>Timupass</h3>
-          <div id="passProgress"><div id="passBar"></div></div>
-          <div id="passRewards"></div>
-          <button id="buyPassBtn">Buy Timupass (500 Tims)</button>
-        </div>
-
-        <div id="leaderPanel" class="subpanel">
-          <h3>Global Leaderboard</h3>
+        <div id="leaderPanel" class="panel-inner">
+          <h3>Local Leaderboard</h3>
           <ol id="leaderboard"></ol>
+          <small>One score per device</small>
         </div>
       </aside>
     </main>
 
-    <footer class="footer">Tim Clicker :3 — Multiplayer</footer>
+    <footer class="footer">Made with ❤️ by Tim</footer>
 
-    <!-- Popup -->
-    <div id="popupOverlay" class="popup hidden">
-      <div class="popup-box">
-        <h3 id="popupTitle">Message</h3>
-        <p id="popupText"></p>
-        <button id="popupClose">OK</button>
+    <!-- Spin Modal -->
+    <div id="spinModal" class="modal hidden" role="dialog" aria-hidden="true">
+      <div class="modal-box">
+        <h3>Timu Spin</h3>
+        <div id="wheel" class="wheel">
+          <canvas id="wheelCanvas" width="400" height="400"></canvas>
+          <div id="wheelPointer">▼</div>
+        </div>
+        <div class="spin-controls">
+          <div>Cost: <span id="spinCost">100</span> Tims</div>
+          <button id="spinBtn">SPIN</button>
+          <button id="buyGoldenBtn">Buy Golden Tim (500 Tims)</button>
+        </div>
+        <button id="closeSpin">Close</button>
       </div>
     </div>
+
+    <!-- Popup -->
+    <div id="popup" class="popup hidden"><div id="popupText"></div><button id="popupOk">OK</button></div>
   </div>
 </body>
 </html>
