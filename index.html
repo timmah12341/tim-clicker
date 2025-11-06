@@ -1,87 +1,34 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Tim Clicker :3 — Timu Spin</title>
-<link rel="icon" href="favicon.png" type="image/png">
-<link rel="stylesheet" href="style.css">
-<script src="script.js" defer></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tim Clicker</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div id="app">
-    <header class="topbar">
-      <h1>Tim Clicker :3</h1>
-      <div class="controls">
-        <button id="musicToggle" title="Toggle music">🔊</button>
-      </div>
-    </header>
+  <div id="game">
+    <h1>Tim Clicker</h1>
+    <p id="count">0</p>
+    <button id="clickTim">Click Tim!</button>
 
-    <main class="main">
-      <section class="left panel">
-        <div id="loginPanel" class="panel-inner">
-          <label for="nameInput">Enter your name</label>
-          <input id="nameInput" placeholder="Your name..." />
-          <button id="startBtn">Save & Start</button>
-        </div>
-
-        <div id="gamePanel" class="hidden panel-inner">
-          <div class="info-row">
-            <div>Player: <strong id="playerName">—</strong></div>
-            <div>Tims: <strong id="tims">0</strong></div>
-            <div>CPS: <strong id="cps">0</strong></div>
-          </div>
-
-          <div id="playArea">
-            <div id="timWrap">
-              <img id="timImg" src="cookie.png" alt="Tim" />
-              <div id="orbitContainer"></div>
-            </div>
-          </div>
-
-          <div class="actions">
-            <button id="openShop">Timu Shop</button>
-            <button id="openMinigames">Minigames</button>
-            <button id="openSpin">Timu Spin (🎰)</button>
-          </div>
-        </div>
-      </section>
-
-      <aside class="right panel">
-        <div id="shopPanel" class="panel-inner hidden">
-          <h3>Timu Shop</h3>
-          <div id="shopList"></div>
-        </div>
-
-        <div id="leaderPanel" class="panel-inner">
-          <h3>Local Leaderboard</h3>
-          <ol id="leaderboard"></ol>
-          <small>One score per device</small>
-        </div>
-      </aside>
-    </main>
-
-    <footer class="footer">Made with ❤️ by Tim</footer>
-
-    <!-- Spin Modal -->
-    <div id="spinModal" class="modal hidden" role="dialog" aria-hidden="true">
-      <div class="modal-box">
-        <h3>Timu Spin</h3>
-        <div id="wheel" class="wheel">
-          <canvas id="wheelCanvas" width="400" height="400"></canvas>
-          <div id="wheelPointer">▼</div>
-        </div>
-        <div class="spin-controls">
-          <div>Cost: <span id="spinCost">100</span> Tims</div>
-          <button id="spinBtn">SPIN</button>
-          <button id="buyGoldenBtn">Buy Golden Tim (500 Tims)</button>
-        </div>
-        <button id="closeSpin">Close</button>
-      </div>
+    <div id="shop">
+      <h2>Shop</h2>
+      <button id="buyGoldenTim">Buy Golden Tim (500 tims)</button>
     </div>
 
-    <!-- Popup -->
-    <div id="popup" class="popup hidden"><div id="popupText"></div><button id="popupOk">OK</button></div>
+    <div id="timuSpinContainer">
+      <button id="openTimuSpin">🎰 Timu Spin</button>
+      <div id="timuSpinModal" class="hidden">
+        <div class="modal-content">
+          <h3>🎡 Timu Spin</h3>
+          <p id="spinResult">Spin to test your luck!</p>
+          <button id="spinButton">Spin!</button>
+          <button id="closeSpin">Close</button>
+        </div>
+      </div>
+    </div>
   </div>
+  <script src="script.js"></script>
 </body>
 </html>
