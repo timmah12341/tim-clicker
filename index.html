@@ -1,55 +1,79 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tim Clicker :3</title>
-  <link rel="stylesheet" href="style.css">
-  <script src="script.js" defer></script>
-  <link rel="icon" type="image/png" href="cookie.png">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Tim Clicker :3</title>
+<link rel="icon" type="image/png" href="cookie.png" />
+
+<!-- Embedding + Safety -->
+<meta http-equiv="X-Frame-Options" content="ALLOWALL">
+<meta name="referrer" content="no-referrer-when-downgrade">
+<meta http-equiv="Content-Security-Policy"
+      content="default-src * 'unsafe-inline' 'unsafe-eval' data: blob:;">
+
+<!-- Styles -->
+<link rel="stylesheet" href="style.css" />
+
+<!-- Script -->
+<script type="module" src="script.js" defer></script>
 </head>
+
 <body>
-  <header class="topbar">
-    <h1>Tim Clicker :3</h1>
-    <button id="musicToggle" title="Toggle Music">🎵</button>
-  </header>
-
-  <main class="game-area">
-    <div class="left-panel">
-      <div id="loginPanel" class="panel">
-        <h2>Enter Your Name</h2>
-        <input type="text" id="nameInput" placeholder="Your name..." />
-        <button id="startBtn">Start Game</button>
+  <div id="root">
+    <header class="topbar">
+      <h1>Tim Clicker :3</h1>
+      <div class="top-right">
+        <span id="version">v2.2</span>
+        <button id="musicToggle" title="Toggle music">🎧</button>
       </div>
+    </header>
 
-      <div id="gamePanel" class="panel hidden">
-        <h2 id="playerName"></h2>
-        <div id="timWrapper">
-          <img id="timImage" src="cookie.png" alt="Tim">
-          <div id="orbitContainer"></div>
+    <main class="stage">
+      <section class="left-panel">
+        <div id="playerPanel" class="panel">
+          <label for="nameInput">Enter your name (saved per device)</label>
+          <input id="nameInput" placeholder="Your name..." />
+          <button id="saveNameBtn">Save & Start</button>
         </div>
-        <p>Tims: <span id="timCount">0</span></p>
-        <p>Tims per second: <span id="tps">0</span></p>
-      </div>
-    </div>
 
-    <div class="right-panel panel hidden" id="shopPanel">
-      <h2>Timu (Shop)</h2>
-      <div id="shopList"></div>
-    </div>
-  </main>
+        <div id="gamePanel" class="panel hidden">
+          <div id="cookieWrap">
+            <img id="cookie" src="cookie.png" alt="Tim" />
+            <div id="orbitContainer"></div>
+          </div>
 
-  <footer class="footer">
-    <small>Made with 💜 by Tim</small>
-  </footer>
+          <div class="stats">
+            <div>Tims: <span id="cookies">0</span></div>
+            <div>TPS: <span id="cps">0</span></div>
+          </div>
 
-  <!-- Popup -->
-  <div id="popupOverlay" class="popup hidden">
-    <div class="popup-box">
-      <h3 id="popupTitle">Message</h3>
-      <p id="popupText"></p>
-      <button id="popupClose">OK</button>
-    </div>
+          <div class="actions">
+            <button id="openTimu">Open Timu (Shop)</button>
+            <button id="openMinigames">Minigames</button>
+            <button id="enterUnderwater">Underwater Zone</button>
+          </div>
+        </div>
+      </section>
+
+      <aside class="right-panel">
+        <div id="shopPanel" class="panel hidden">
+          <h3>Timu (Shop)</h3>
+          <div id="shopList"></div>
+        </div>
+
+        <div id="leaderPanel" class="panel hidden">
+          <h3>Leaderboard</h3>
+          <ol id="leaderboard"></ol>
+        </div>
+      </aside>
+    </main>
+
+    <footer class="footer">
+      <small>Made with 💜 by Tim</small>
+    </footer>
   </div>
+
+  <canvas id="fxCanvas" class="fx-canvas"></canvas>
 </body>
 </html>
