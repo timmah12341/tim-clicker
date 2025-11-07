@@ -1,34 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Tim Clicker</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tim Clicker :3</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
+  <link rel="icon" type="image/png" href="cookie.png">
 </head>
 <body>
-  <div id="game">
-    <h1>Tim Clicker</h1>
-    <p id="count">0</p>
-    <button id="clickTim">Click Tim!</button>
+  <header class="topbar">
+    <h1>Tim Clicker :3</h1>
+    <button id="musicToggle" title="Toggle Music">🎵</button>
+  </header>
 
-    <div id="shop">
-      <h2>Shop</h2>
-      <button id="buyGoldenTim">Buy Golden Tim (500 tims)</button>
-    </div>
+  <main class="game-area">
+    <div class="left-panel">
+      <div id="loginPanel" class="panel">
+        <h2>Enter Your Name</h2>
+        <input type="text" id="nameInput" placeholder="Your name..." />
+        <button id="startBtn">Start Game</button>
+      </div>
 
-    <div id="timuSpinContainer">
-      <button id="openTimuSpin">🎰 Timu Spin</button>
-      <div id="timuSpinModal" class="hidden">
-        <div class="modal-content">
-          <h3>🎡 Timu Spin</h3>
-          <p id="spinResult">Spin to test your luck!</p>
-          <button id="spinButton">Spin!</button>
-          <button id="closeSpin">Close</button>
+      <div id="gamePanel" class="panel hidden">
+        <h2 id="playerName"></h2>
+        <div id="timWrapper">
+          <img id="timImage" src="cookie.png" alt="Tim">
+          <div id="orbitContainer"></div>
         </div>
+        <p>Tims: <span id="timCount">0</span></p>
+        <p>Tims per second: <span id="tps">0</span></p>
       </div>
     </div>
+
+    <div class="right-panel panel hidden" id="shopPanel">
+      <h2>Timu (Shop)</h2>
+      <div id="shopList"></div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <small>Made with 💜 by Tim</small>
+  </footer>
+
+  <!-- Popup -->
+  <div id="popupOverlay" class="popup hidden">
+    <div class="popup-box">
+      <h3 id="popupTitle">Message</h3>
+      <p id="popupText"></p>
+      <button id="popupClose">OK</button>
+    </div>
   </div>
-  <script src="script.js"></script>
 </body>
 </html>
