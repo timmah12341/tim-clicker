@@ -1,6 +1,6 @@
-// firebase.js - initialize Firebase app and export helpers
+// firebase.js (v2.1) - prefilled with your config, uses Firebase Web v11 modules
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-import { getDatabase, ref, set, get, onValue, push, update } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+import { getDatabase, ref, set, get, onValue } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
 import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
 
 const firebaseConfig = {
@@ -20,51 +20,27 @@ const auth = getAuth(app);
 
 let _uid = null;
 export function ensureAuth(){
-  return new Promise((resolve,reject)=>{
-    if(auth.currentUser){ _uid = auth.currentUser.uid; resolve(_uid); return; }
+  return new Promise((resolve, reject) => {
+    if (auth.currentUser){ _uid = auth.currentUser.uid; resolve(_uid); return; }
     signInAnonymously(auth).catch(()=>{});
-    onAuthStateChanged(auth, user => { if(user){ _uid = user.uid; resolve(_uid);} else reject(new Error('auth')); });
+    onAuthStateChanged(auth, (user) => {
+      if (user){ _uid = user.uid; resolve(_uid); } else reject(new Error('auth failed'));
+    });
   });
 }
 
-export async function createRoom(ownerName){
-  const code = generateRoomCode();
-  await set(ref(db, `rooms/${code}`), { created: Date.now(), owner: ownerName });
-  return code;
+export async function writePlayer(uid, data){
+  try { await set(ref(db, 'players/' + uid), data); } catch(e){ console.warn('writePlayer failed', e); }
 }
 
-export async function joinRoom(code, player){
-  await set(ref(db, `rooms/${code}/players/${player.uid}`), player);
+export async function readPlayersOnce(){
+  try { const s = await get(ref(db, 'players')); return s.exists() ? s.val() : {}; } catch(e){ console.warn('readPlayersOnce failed', e); return {}; }
 }
 
-export function listenRoomPlayers(code, cb){
-  return onValue(ref(db, `rooms/${code}/players`), snap => cb(snap.exists()? snap.val() : {}));
+export async function readPlayer(uid){
+  try { const s = await get(ref(db, 'players/' + uid)); return s.exists() ? s.val() : null; } catch(e){ console.warn(e); return null; }
 }
 
-export async function sendChat(code, msgObj){
-  const chatRef = ref(db, `rooms/${code}/chat`);
-  await push(chatRef, msgObj);
-}
+export function onPlayers(cb){ return onValue(ref(db, 'players'), snapshot => cb(snapshot.exists() ? snapshot.val() : {})); }
 
-export function listenChat(code, cb){
-  return onValue(ref(db, `rooms/${code}/chat`), snap => cb(snap.exists()? snap.val() : {}));
-}
-
-export async function updatePlayer(code, uid, patch){
-  await update(ref(db, `rooms/${code}/players/${uid}`), patch);
-}
-
-export async function writeGlobal(uid, data){
-  await set(ref(db, `players/${uid}`), data);
-}
-
-export async function readRoomOnce(code){
-  const s = await get(ref(db, `rooms/${code}`));
-  return s.exists()? s.val() : null;
-}
-
-export function generateRoomCode(){
-  const letters = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-  let s=""; for(let i=0;i<5;i++) s+=letters.charAt(Math.floor(Math.random()*letters.length)); return s;
-}
 export { db };
