@@ -1,52 +1,141 @@
-body {
-  background: url('BgBg.png') no-repeat center center fixed;
-  background-size: cover;
-  color: white;
-  font-family: 'Comic Sans MS', sans-serif;
-  text-align: center;
-  margin: 0;
-  padding: 0;
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap');
+
+* {
+  box-sizing: border-box;
+  font-family: 'Orbitron', sans-serif;
 }
 
-#game {
-  padding: 20px;
+body {
+  margin: 0;
+  background: radial-gradient(circle at center, #1a001f, #000);
+  color: #fff;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(90deg, #4b0082, #000);
+  padding: 10px 20px;
+  box-shadow: 0 0 15px #a020f0;
+}
+
+h1 {
+  color: #ff99ff;
+  text-shadow: 0 0 15px #ff00ff;
+  margin: 0;
 }
 
 button {
-  background: #444;
-  color: white;
+  background: linear-gradient(90deg, #7f00ff, #e100ff);
   border: none;
-  padding: 10px 20px;
-  margin: 5px;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 8px;
   cursor: pointer;
-  border-radius: 10px;
-  font-size: 16px;
-  transition: 0.2s;
+  transition: transform 0.1s;
 }
 
 button:hover {
-  background: #666;
+  transform: scale(1.1);
+}
+
+.panel {
+  background: rgba(40, 0, 60, 0.6);
+  border: 2px solid #a020f0;
+  box-shadow: 0 0 20px #6a00ff;
+  padding: 15px;
+  border-radius: 12px;
+  margin: 15px;
 }
 
 .hidden {
   display: none;
 }
 
-#timuSpinModal {
+.game-area {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px;
+}
+
+#timWrapper {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  margin: auto;
+}
+
+#timImage {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  animation: pulse 2s infinite alternate;
+  cursor: pointer;
+}
+
+@keyframes pulse {
+  from { transform: scale(1); }
+  to { transform: scale(1.05); }
+}
+
+#orbitContainer img {
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  animation: spin 8s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg) translateX(120px) rotate(0deg); }
+  to { transform: rotate(360deg) translateX(120px) rotate(-360deg); }
+}
+
+.footer {
+  text-align: center;
+  padding: 10px;
+  border-top: 1px solid #a020f0;
+  color: #ccc;
+}
+
+/* Popup styling */
+.popup {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.8);
+  background: rgba(10, 0, 20, 0.75);
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 999;
 }
 
-.modal-content {
-  background: #222;
-  padding: 20px;
-  border-radius: 15px;
+.popup-box {
+  background: linear-gradient(145deg, #3b0069, #1e0034);
+  border: 2px solid #a020f0;
+  box-shadow: 0 0 25px #d020ff;
+  padding: 24px;
+  border-radius: 12px;
+  text-align: center;
   width: 300px;
+  color: white;
+  animation: popIn 0.3s ease;
+}
+
+@keyframes popIn {
+  0% { transform: scale(0.7); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.popup-box h3 {
+  color: #ffccff;
+  text-shadow: 0 0 10px #e100ff;
+}
+
+#popupClose {
+  margin-top: 10px;
 }
