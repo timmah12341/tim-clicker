@@ -46,6 +46,7 @@ const upgrades = [
   { id: 'u6', name: 'Ball Guy Tim', baseCost: 40000, add: 450, icon: 'upgrade6.png' },
   { id: 'u7', name: 'Johan', baseCost: 120000, add: 1200, icon: 'upgrade7.png' },
   { id: 'u8', name: 'Tequilla', baseCost: 300000, add: 2500, icon: 'upgrade8.png' }
+  { id: 'u9', name: '[replace this]', baseCost: 1000000, add: 10000, icon: 'upgrade9.png' }
 ];
 
 function ownedCount(id){ const o = owned.find(x=>x.id===id); return o? o.count : 0; }
