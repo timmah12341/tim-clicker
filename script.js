@@ -45,7 +45,7 @@ const upgrades = [
   { id: 'u5', name: 'Depression Upgrade', baseCost: 15000, add: 180, icon: 'upgrade5.png' },
   { id: 'u6', name: 'Ball Guy Tim', baseCost: 40000, add: 450, icon: 'upgrade6.png' },
   { id: 'u7', name: 'Johan', baseCost: 120000, add: 1200, icon: 'upgrade7.png' },
-  { id: 'u8', name: 'Tequilla', baseCost: 300000, add: 2500, icon: 'upgrade8.png' }
+  { id: 'u8', name: 'Tequilla', baseCost: 300000, add: 2500, icon: 'upgrade8.png' },
   { id: 'u9', name: 'Golden Tim', baseCost: 1000000, add: 50000, icon: 'upgrade9.png' }
 ];
 
@@ -53,6 +53,10 @@ function ownedCount(id){ const o = owned.find(x=>x.id===id); return o? o.count :
 function increaseOwned(id){ let o = owned.find(x=>x.id===id); if(!o) owned.push({id, count:1}); else o.count++; localStorage.setItem('tim_owned', JSON.stringify(owned)); }
 
 function calcCost(base, count){ return Math.max(1, Math.round(base * Math.pow(1.25, count))); }
+
+// Safety: ensure saved owned entries only refer to known upgrade IDs
+owned = (owned || []).filter(o => upgrades.some(u => u.id === o.id));
+
 
 /* UI init */
 if (playerName){ initAfterName(); } else { playerPanel.classList.remove('hidden'); gamePanel.classList.add('hidden'); }
