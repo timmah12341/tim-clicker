@@ -28,3 +28,7 @@ button{background:linear-gradient(90deg,var(--accent),#7b61f7);border:none;paddi
 #bg-animated{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
 .bg-orb{position:absolute;border-radius:50%;filter:blur(48px);opacity:0.09;animation:orbFloat linear infinite}
 @keyframes orbFloat{from{transform:translateY(0)}to{transform:translateY(-120vh)}}
+
+/* shop item */
+.shop-item{display:flex;justify-content:space-between;align-items:center;padding:8px;border-radius:8px;background:rgba(255,255,255,0.02);margin-bottom:8px}
+
