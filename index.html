@@ -4,100 +4,79 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Tim Clicker :3</title>
-<link rel="icon" href="favicon.png">
-<link rel="stylesheet" href="style.css">
+<link rel="icon" href="favicon.png" type="image/png">
+<link rel="stylesheet" href="style.css" />
+<script type="module" src="script.js" defer></script>
 </head>
 <body>
   <div id="bg-animated" aria-hidden="true"></div>
+  <canvas id="bgParticles" class="bg-particles"></canvas>
 
-  <header class="topbar">
-    <h1>Tim Clicker :3</h1>
-    <div class="top-right">
-      <button id="musicToggle" title="Toggle music">🔊</button>
-      <button id="logoutBtn" class="hidden">Logout</button>
-    </div>
-  </header>
-
-  <main class="main">
-    <aside class="left-panel">
-      <div id="authPanel" class="panel">
-        <h3>Login / Sign up</h3>
-        <input id="email" type="email" placeholder="Email">
-        <input id="password" type="password" placeholder="Password">
-        <label><input id="keepLogin" type="checkbox"> Keep me logged in</label>
-        <div class="row">
-          <button id="loginBtn">Login</button>
-          <button id="signupBtn">Sign up</button>
-          <button id="guestBtn">Play guest</button>
-        </div>
-        <div id="authMsg" class="muted"></div>
+  <div id="app">
+    <header class="topbar">
+      <h1 id="siteTitle">Tim Clicker :3</h1>
+      <div class="controls">
+        <button id="dailyBtn" title="Daily reward">🎁</button>
+        <button id="musicToggle" title="Toggle music">🔊</button>
       </div>
+    </header>
 
-      <div id="playerPanel" class="panel hidden">
-        <div>Player: <span id="playerName">—</span></div>
-        <div id="johanSlot" aria-hidden="true"></div>
-        <div class="stats">Tims: <span id="tims">0</span> | CPS: <span id="cps">0</span></div>
-        <div class="actions">
-          <button id="openShop">Shop</button>
-          <button id="openSkins">Skins</button>
-        </div>
-      </div>
-    </aside>
-
-    <section class="center">
-      <div id="gamePanel" class="panel hidden">
-        <div id="timWrap">
-          <img id="timImg" src="cookie.png" alt="Tim" />
-          <div id="orbit" aria-hidden="true"></div>
+    <main class="main">
+      <!-- Left: Clicker -->
+      <section class="left panel">
+        <div id="playerPanel" class="center">
+          <label for="nameInput">Enter your name (saved per device)</label>
+          <input id="nameInput" placeholder="Your name..." />
+          <button id="saveNameBtn">Save & Start</button>
         </div>
 
-        <div id="shop" class="panel hidden">
-          <h3>Timu Shop</h3>
-          <div id="shopList"></div>
+        <div id="gamePanel" class="hidden">
+          <div id="topInfo" class="info-row">
+            <div>Player: <strong id="playerNameLabel">—</strong></div>
+            <div>Tims: <strong id="tims">0</strong></div>
+            <div>CPS: <strong id="cps">0</strong></div>
+          </div>
+
+          <div id="playArea">
+            <div id="timWrap">
+              <img id="timImg" src="cookie.png" alt="Tim" />
+              <div id="orbitContainer" aria-hidden="true"></div>
+            </div>
+          </div>
+
+          <div class="actions-row">
+            <button id="openMinigames">Minigames</button>
+            <button id="openSkins">Skins</button>
+          </div>
+
+          <div id="minigamePanel" class="subpanel hidden">
+            <h3>Minigames</h3>
+            <button id="playClickRush">Click Rush (10s)</button>
+            <div id="minigameArea"></div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- Right: Shop & Leaderboard -->
+      <aside class="right panel">
+        <div class="panel inner">
+          <button id="openShop" class="wide">Timu (Shop)</button>
+          <div id="shopPanel" class="subpanel hidden">
+            <h3>Timu Shop</h3>
+            <div id="shopList" class="shop-grid"></div>
+          </div>
         </div>
 
-      </div>
-    </section>
+        <div class="panel inner" id="leaderBox">
+          <h3>Leaderboard</h3>
+          <ol id="leaderboard"></ol>
+        </div>
+      </aside>
+    </main>
 
-    <aside class="right-panel">
-      <div class="panel">
-        <h3>Leaderboard</h3>
-        <ol id="leaderboard"></ol>
-      </div>
-    </aside>
-  </main>
-
-  <div id="adminButton" class="hidden" title="Admin panel">⚙️</div>
-
-  <div id="adminModal" class="modal hidden" role="dialog" aria-modal="true">
-    <div class="modal-backdrop" id="adminBackdrop"></div>
-    <div class="modal-content" id="adminContent">
-      <h3>Admin Panel</h3>
-      <button id="closeAdmin">Close</button>
-      <div class="admin-row">
-        <input id="adminTarget" placeholder="target name or uid">
-        <button id="adminKick">Kick</button>
-        <button id="adminReset">Reset</button>
-      </div>
-      <div class="admin-row">
-        <input id="adminMsg" placeholder="Broadcast message">
-        <button id="adminBroadcast">Send</button>
-      </div>
-      <div class="admin-row">
-        <input id="adminUpgradeId" placeholder="upgrade id e.g. u1">
-        <button id="adminGive">Give to all</button>
-      </div>
-      <div class="admin-row">
-        <button id="adminDisco">Disco</button>
-        <button id="adminRainbow">Rainbow</button>
-        <button id="adminConfetti">Confetti</button>
-      </div>
-    </div>
+    <footer class="footer">Tim Clicker :3 — made by Tim</footer>
   </div>
 
-  <div id="toastContainer" aria-live="polite" ></div>
-
-<script type="module" src="firebase.js"></script>
-<script type="module" src="script.js"></script>
 </body>
 </html>
