@@ -18,8 +18,9 @@ button{background:linear-gradient(90deg,var(--accent),#7b61f7);border:none;paddi
 .actions{margin-top:10px}
 .stats{margin-top:8px;font-weight:600}
 #adminButton{position:fixed;right:18px;bottom:18px;width:56px;height:56px;border-radius:50%;background:linear-gradient(90deg,#f6a6ff,#b45cff);display:flex;align-items:center;justify-content:center;font-size:22px;cursor:pointer;z-index:200;color:#030016;box-shadow:0 10px 40px rgba(180,92,255,0.18)}
-.modal{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.5);z-index:240}
-.modal-content{background:#0f0b16;padding:16px;border-radius:12px;width:420px;color:#fff;border:1px solid rgba(180,92,255,0.12)}
+.modal{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.0);z-index:240}
+.modal-backdrop{position:absolute;inset:0;background:rgba(0,0,0,0.5);}
+.modal-content{position:relative;background:#0f0b16;padding:16px;border-radius:12px;width:420px;color:#fff;border:1px solid rgba(180,92,255,0.12);z-index:245}
 .admin-row{display:flex;gap:8px;margin-top:8px}
 #toastContainer{position:fixed;bottom:12px;left:12px;display:flex;flex-direction:column;gap:10px;z-index:300}
 .toast{background:linear-gradient(90deg,#201033,#0f0b16);color:#ffdff6;padding:10px 14px;border-radius:10px;box-shadow:0 8px 30px rgba(0,0,0,0.6);animation:toastIn 4s forwards}
@@ -31,4 +32,3 @@ button{background:linear-gradient(90deg,var(--accent),#7b61f7);border:none;paddi
 
 /* shop item */
 .shop-item{display:flex;justify-content:space-between;align-items:center;padding:8px;border-radius:8px;background:rgba(255,255,255,0.02);margin-bottom:8px}
-
