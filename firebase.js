@@ -1,7 +1,17 @@
-// firebase.js - modular for browser
+// firebase.js - modular
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.11.0/firebase-app.js";
 import { getDatabase, ref, set, get, onValue, update } from "https://www.gstatic.com/firebasejs/11.11.0/firebase-database.js";
-import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInAnonymously, onAuthStateChanged, signOut, setPersistence, browserLocalPersistence, browserSessionPersistence } from "https://www.gstatic.com/firebasejs/11.11.0/firebase-auth.js";
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  signInAnonymously,
+  onAuthStateChanged,
+  signOut,
+  setPersistence,
+  browserLocalPersistence,
+  browserSessionPersistence
+} from "https://www.gstatic.com/firebasejs/11.11.0/firebase-auth.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBZDGbuenDWIE8O0hjCa8h98n1os-8MZNs",
@@ -45,9 +55,26 @@ export async function readPlayer(uid){ const s = await get(ref(db, `users/${uid}
 export async function readPlayersOnce(){ const s = await get(ref(db, `users`)); return s.exists()? s.val(): {}; }
 export function onPlayers(cb){ return onValue(ref(db, `users`), snap => cb(snap.exists()? snap.val(): {})); }
 
-export async function broadcastMessage(adminUid, text){ await set(ref(db, 'globalMessage'), { text, sentBy: adminUid, ts: Date.now() }); }
-export async function kickPlayer(targetUid, adminUid, reason='kicked'){ await update(ref(db, `users/${targetUid}/kicked`), { by: adminUid, reason, ts: Date.now() }); }
-export async function resetPlayer(targetUid){ await set(ref(db, `users/${targetUid}`), { name:'', tims:0, cps:0, owned:[], skin:'cookie.png' }); }
-export async function giveUpgradeToAll(upgradeId){ const all = await readPlayersOnce(); for(const uid of Object.keys(all || {})){ const p = all[uid] || {}; const owned = Array.isArray(p.owned)? p.owned : []; const idx = owned.findIndex(x=>x.id===upgradeId); if(idx>=0) owned[idx].count = (owned[idx].count||0)+1; else owned.push({id:upgradeId,count:1}); await update(ref(db, `users/${uid}`), { owned }); } }
+export async function broadcastMessage(adminUid, text, event=null, extra={}){
+  await set(ref(db, 'globalMessage'), { text, sentBy: adminUid, ts: Date.now(), event, extra });
+}
+export async function kickPlayer(targetUid, adminUid, reason='kicked'){
+  // write a kicked flag so client will reload
+  await update(ref(db, `users/${targetUid}`), { kicked: { by: adminUid, reason, ts: Date.now() } });
+}
+export async function resetPlayer(targetUid){
+  await set(ref(db, `users/${targetUid}`), { name:'', tims:0, cps:0, owned:[], skin:'cookie.png' });
+}
+export async function giveUpgradeToAll(upgradeId){
+  const all = await readPlayersOnce();
+  for(const uid of Object.keys(all || {})){
+    const p = all[uid] || {};
+    const owned = Array.isArray(p.owned)? p.owned : [];
+    const idx = owned.findIndex(x=>x.id===upgradeId);
+    if(idx>=0) owned[idx].count = (owned[idx].count||0)+1;
+    else owned.push({id:upgradeId,count:1});
+    await update(ref(db, `users/${uid}`), { owned });
+  }
+}
 
 export { db, auth };
