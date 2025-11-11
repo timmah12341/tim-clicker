@@ -1,27 +1,30 @@
-:root{--bg:#0f1115;--panel:#18191b;--accent:#5865f2;--muted:#9aa3b2}
-*{box-sizing:border-box;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial}
-html,body{height:100%;margin:0;background:linear-gradient(180deg,#07070a,#0f0f14);color:#e6eef8}
-.topbar{display:flex;justify-content:space-between;align-items:center;padding:12px;background:rgba(0,0,0,0.15);border-bottom:1px solid rgba(255,255,255,0.02)}
-.main{display:flex;gap:12px;padding:14px}
+:root{--bg:#070010;--panel:#111016;--accent:#b45cff;--muted:#9b8fb2}
+*{box-sizing:border-box;font-family:Inter,system-ui,Arial,sans-serif}
+html,body{height:100%;margin:0;background:radial-gradient(circle at 10% 10%, #0b0015 0%, #050007 40%, #030006 100%);color:#eae6ff}
+.topbar{display:flex;justify-content:space-between;align-items:center;padding:12px;background:linear-gradient(90deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));border-bottom:1px solid rgba(255,255,255,0.03);z-index:30;position:relative}
+.main{display:flex;gap:12px;padding:14px;position:relative;z-index:10}
 .left-panel{width:300px}
 .center{flex:1}
 .right-panel{width:280px}
 .panel{background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,0.03)}
 .hidden{display:none}
 #timWrap{display:flex;justify-content:center;padding:24px;position:relative}
-#timImg{width:220px;height:220px;border-radius:50%;cursor:pointer;box-shadow:0 10px 40px rgba(88,101,242,0.12);transition:transform .12s}
+#timImg{width:220px;height:220px;border-radius:50%;cursor:pointer;box-shadow:0 10px 60px rgba(180,92,255,0.12);transition:transform .12s}
 #orbit{position:absolute;inset:0;pointer-events:none}
-.orbit-item{position:absolute;width:36px;height:36px;border-radius:8px;overflow:hidden}
+.orbit-item{position:absolute;width:38px;height:38px;border-radius:10px;overflow:hidden;filter:drop-shadow(0 6px 18px rgba(180,92,255,0.18))}
 .row{display:flex;gap:8px}
-button{background:linear-gradient(90deg,var(--accent),#7b61f7);border:none;padding:8px 10px;border-radius:8px;color:#fff;cursor:pointer}
+button{background:linear-gradient(90deg,var(--accent),#7b61f7);border:none;padding:8px 10px;border-radius:10px;color:#fff;cursor:pointer}
 .muted{color:var(--muted);font-size:13px;margin-top:8px}
-.adminSidebar{position:fixed;right:0;top:0;height:100%;width:320px;background:#151618;color:#fff;padding:16px;z-index:150;box-shadow:-12px 0 40px rgba(0,0,0,0.6)}
-#adminButton{position:fixed;right:18px;bottom:18px;width:56px;height:56px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:22px;cursor:pointer;z-index:160;color:#041027}
-#toastContainer{position:fixed;bottom:12px;left:12px;display:flex;flex-direction:column;gap:10px;z-index:200}
-.toast{background:#0f1113;color:#fff;padding:8px 12px;border-radius:8px;box-shadow:0 6px 20px rgba(0,0,0,0.4);animation:toastIn 4s forwards}
+.actions{margin-top:10px}
+.stats{margin-top:8px;font-weight:600}
+#adminButton{position:fixed;right:18px;bottom:18px;width:56px;height:56px;border-radius:50%;background:linear-gradient(90deg,#f6a6ff,#b45cff);display:flex;align-items:center;justify-content:center;font-size:22px;cursor:pointer;z-index:200;color:#030016;box-shadow:0 10px 40px rgba(180,92,255,0.18)}
+.modal{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.5);z-index:240}
+.modal-content{background:#0f0b16;padding:16px;border-radius:12px;width:420px;color:#fff;border:1px solid rgba(180,92,255,0.12)}
+.admin-row{display:flex;gap:8px;margin-top:8px}
+#toastContainer{position:fixed;bottom:12px;left:12px;display:flex;flex-direction:column;gap:10px;z-index:300}
+.toast{background:linear-gradient(90deg,#201033,#0f0b16);color:#ffdff6;padding:10px 14px;border-radius:10px;box-shadow:0 8px 30px rgba(0,0,0,0.6);animation:toastIn 4s forwards}
 @keyframes toastIn{0%{opacity:0;transform:translateY(8px)}10%{opacity:1;transform:translateY(0)}90%{opacity:1}100%{opacity:0;transform:translateY(-8px)}}
-
 /* animated orbs */
-#bg-animated{position:fixed;inset:0;z-index:0;overflow:hidden}
-.bg-orb{position:absolute;border-radius:50%;filter:blur(40px);opacity:0.08;animation:float 30s linear infinite}
-@keyframes float{from{transform:translateY(0)}to{transform:translateY(-120vh)}}
+#bg-animated{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.bg-orb{position:absolute;border-radius:50%;filter:blur(48px);opacity:0.09;animation:orbFloat linear infinite}
+@keyframes orbFloat{from{transform:translateY(0)}to{transform:translateY(-120vh)}}

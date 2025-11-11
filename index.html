@@ -8,12 +8,12 @@
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div id="bg-animated"></div>
+  <div id="bg-animated" aria-hidden="true"></div>
 
   <header class="topbar">
     <h1>Tim Clicker :3</h1>
     <div class="top-right">
-      <button id="musicToggle">🔊</button>
+      <button id="musicToggle" title="Toggle music">🔊</button>
       <button id="logoutBtn" class="hidden">Logout</button>
     </div>
   </header>
@@ -47,13 +47,15 @@
     <section class="center">
       <div id="gamePanel" class="panel hidden">
         <div id="timWrap">
-          <img id="timImg" src="cookie.png" alt="Tim">
+          <img id="timImg" src="cookie.png" alt="Tim" />
           <div id="orbit"></div>
         </div>
+
         <div id="shop" class="panel hidden">
           <h3>Timu Shop</h3>
           <div id="shopList"></div>
         </div>
+
       </div>
     </section>
 
@@ -67,26 +69,32 @@
 
   <div id="adminButton" class="hidden" title="Admin panel">⚙️</div>
 
-  <div id="adminSidebar" class="adminSidebar hidden">
-    <h3>Admin</h3>
-    <button id="closeAdmin">Close</button>
-    <div class="admin-controls">
-      <input id="adminTarget" placeholder="target name or uid">
-      <div class="row">
+  <div id="adminModal" class="modal hidden" role="dialog" aria-modal="true">
+    <div class="modal-content">
+      <h3>Admin Panel</h3>
+      <button id="closeAdmin">Close</button>
+      <div class="admin-row">
+        <input id="adminTarget" placeholder="target name or uid">
         <button id="adminKick">Kick</button>
         <button id="adminReset">Reset</button>
       </div>
-      <input id="adminMsg" placeholder="Broadcast message">
-      <button id="adminBroadcast">Send Global</button>
-      <input id="adminUpgradeId" placeholder="Upgrade id (e.g. u1)">
-      <button id="adminGive">Give Upgrade to All</button>
-      <button id="adminDisco">Disco Mode</button>
-      <button id="adminRainbow">Rainbow Flash</button>
-      <button id="adminConfetti">Confetti</button>
+      <div class="admin-row">
+        <input id="adminMsg" placeholder="Broadcast message">
+        <button id="adminBroadcast">Send</button>
+      </div>
+      <div class="admin-row">
+        <input id="adminUpgradeId" placeholder="upgrade id e.g. u1">
+        <button id="adminGive">Give to all</button>
+      </div>
+      <div class="admin-row">
+        <button id="adminDisco">Disco</button>
+        <button id="adminRainbow">Rainbow</button>
+        <button id="adminConfetti">Confetti</button>
+      </div>
     </div>
   </div>
 
-  <div id="toastContainer"></div>
+  <div id="toastContainer" aria-live="polite" ></div>
 
 <script type="module" src="firebase.js"></script>
 <script type="module" src="script.js"></script>

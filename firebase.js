@@ -1,4 +1,4 @@
-// firebase.js - modular (configured for your Firebase project)
+// firebase.js - modular for browser
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.11.0/firebase-app.js";
 import { getDatabase, ref, set, get, onValue, update } from "https://www.gstatic.com/firebasejs/11.11.0/firebase-database.js";
 import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInAnonymously, onAuthStateChanged, signOut, setPersistence, browserLocalPersistence, browserSessionPersistence } from "https://www.gstatic.com/firebasejs/11.11.0/firebase-auth.js";
