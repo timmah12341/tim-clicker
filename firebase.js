@@ -1,59 +1,46 @@
-// firebase.js (modular) - configured for your project
-import { initializeApp } from "https://www.gstatic.com/firebasejs/11.11.0/firebase-app.js";
-import { getDatabase, ref, set, get, onValue, update } from "https://www.gstatic.com/firebasejs/11.11.0/firebase-database.js";
-import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInAnonymously, onAuthStateChanged, signOut, setPersistence, browserLocalPersistence, browserSessionPersistence } from "https://www.gstatic.com/firebasejs/11.11.0/firebase-auth.js";
+// firebase.js (v2.1) - prefilled with your config, uses Firebase Web v11 modules
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+import { getDatabase, ref, set, get, onValue } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBZDGbuenDWIE8O0hjCa8h98n1os-8MZNs",
-  authDomain: "tim-clicker.firebaseapp.com",
-  databaseURL: "https://tim-clicker-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "tim-clicker",
-  storageBucket: "tim-clicker.firebasestorage.app",
-  messagingSenderId: "493561136507",
-  appId: "1:493561136507:web:0a842da88e6a764624e9de",
-  measurementId: "G-FTKCVMZH0Z"
+  apiKey: "AIzaSyDleRW-O4yP9FJhuqQtMTVT0c_Dd1PPA98",
+  authDomain: "tim-clicker-alpha.firebaseapp.com",
+  databaseURL: "https://tim-clicker-alpha-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "tim-clicker-alpha",
+  storageBucket: "tim-clicker-alpha.firebasestorage.app",
+  messagingSenderId: "40617780569",
+  appId: "1:40617780569:web:1a82146a3554ab1e365848",
+  measurementId: "G-H73TX7JNVP"
 };
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 const auth = getAuth(app);
 
-export async function loginEmail(email, password, keep){
-  try{
-    await setPersistence(auth, keep ? browserLocalPersistence : browserSessionPersistence);
-    const cred = await signInWithEmailAndPassword(auth, email, password);
-    return cred.user.uid;
-  }catch(e){ throw e; }
-}
-
-export async function signupEmail(email, password, keep){
-  try{
-    await setPersistence(auth, keep ? browserLocalPersistence : browserSessionPersistence);
-    const cred = await createUserWithEmailAndPassword(auth, email, password);
-    return cred.user.uid;
-  }catch(e){ throw e; }
-}
-
-export async function guestLogin(){ // anonymous fallback
-  return new Promise((resolve,reject)=>{
+let _uid = null;
+export function ensureAuth(){
+  return new Promise((resolve, reject) => {
+    if (auth.currentUser){ _uid = auth.currentUser.uid; resolve(_uid); return; }
     signInAnonymously(auth).catch(()=>{});
-    const off = onAuthStateChanged(auth, user => { off(); if(user) resolve(user.uid); else reject(new Error('auth')); });
+    onAuthStateChanged(auth, (user) => {
+      if (user){ _uid = user.uid; resolve(_uid); } else reject(new Error('auth failed'));
+    });
   });
 }
 
-export function logout(){ signOut(auth); }
+export async function writePlayer(uid, data){
+  try { await set(ref(db, 'players/' + uid), data); } catch(e){ console.warn('writePlayer failed', e); }
+}
 
-// player helpers - data saved under /users/{uid}
-export async function writePlayer(uid, data){ await set(ref(db, `users/${uid}`), data); }
-export async function updatePlayer(uid, partial){ await update(ref(db, `users/${uid}`), partial); }
-export async function readPlayer(uid){ const s = await get(ref(db, `users/${uid}`)); return s.exists() ? s.val() : null; }
-export async function readPlayersOnce(){ const s = await get(ref(db, `users`)); return s.exists() ? s.val() : {}; }
-export function onPlayers(cb){ return onValue(ref(db, `users`), snap => cb(snap.exists()? snap.val() : {})); }
+export async function readPlayersOnce(){
+  try { const s = await get(ref(db, 'players')); return s.exists() ? s.val() : {}; } catch(e){ console.warn('readPlayersOnce failed', e); return {}; }
+}
 
-// admin helpers - only allowed in rules for your admin email
-export async function broadcastMessage(adminUid, text){ await set(ref(db, 'globalMessage'), { text, sentBy: adminUid, ts: Date.now() }); }
-export async function kickPlayer(targetUid, adminUid, reason='Kicked'){ await update(ref(db, `users/${targetUid}/kicked`), { by: adminUid, reason, ts: Date.now() }); }
-export async function resetPlayer(targetUid){ await set(ref(db, `users/${targetUid}`), { name:'', tims:0, cps:0, owned:[], skin:'cookie.png' }); }
-export async function giveUpgradeToAll(upgradeId){ const all = await readPlayersOnce(); for(const uid of Object.keys(all || {})){ const p = all[uid] || {}; const owned = Array.isArray(p.owned) ? p.owned : []; const idx = owned.findIndex(x=>x.id===upgradeId); if(idx>=0) owned[idx].count = (owned[idx].count||0) + 1; else owned.push({id:upgradeId,count:1}); await update(ref(db, `users/${uid}`), { owned }); } }
+export async function readPlayer(uid){
+  try { const s = await get(ref(db, 'players/' + uid)); return s.exists() ? s.val() : null; } catch(e){ console.warn(e); return null; }
+}
 
-export { db, auth };
+export function onPlayers(cb){ return onValue(ref(db, 'players'), snapshot => cb(snapshot.exists() ? snapshot.val() : {})); }
+
+export { db };
