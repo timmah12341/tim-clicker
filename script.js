@@ -38,6 +38,7 @@ let owned = JSON.parse(localStorage.getItem('tim_owned') || '[]');
 let selectedSkin = localStorage.getItem('tim_skin') || 'cookie.png';
 
 const upgrades = [
+  { id: 'u0', name: 'bacteriophage', baseCost: 1, add: 0, icon: 'upgrade0.1.png' },
   { id: 'u1', name: 'Tim-ema', baseCost: 100, add: 2, icon: 'upgrade1.png' },
   { id: 'u1.5', name: 'chezburger', baseCost: 250, add: 4, icon: 'upgrade.png' },
   { id: 'u2', name: 'Floatie', baseCost: 500, add: 8, icon: 'upgrade2.png' },
