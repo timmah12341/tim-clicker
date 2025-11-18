@@ -1,4 +1,4 @@
-// script.js v2.1
+// script.js v2.1 (updated - lofi1.wav background)
 import { ensureAuth, writePlayer, readPlayersOnce, readPlayer, onPlayers } from './firebase.js';
 
 /* DOM refs */
@@ -37,6 +37,7 @@ let cps = Number(localStorage.getItem('tim_cps') || 0);
 let owned = JSON.parse(localStorage.getItem('tim_owned') || '[]');
 let selectedSkin = localStorage.getItem('tim_skin') || 'cookie.png';
 
+/* upgrades */
 const upgrades = [
   { id: 'u0.5', name: 'bacteriophage', baseCost: 1, add: 0.1, icon: 'upgrade0.1.png' },
   { id: 'u1', name: 'Tim-ema', baseCost: 100, add: 2, icon: 'upgrade1.png' },
@@ -197,14 +198,61 @@ function spawnClickFx(){
 }
 function step(){ ctx.clearRect(0,0,canvas.width,canvas.height); for(let i=particles.length-1;i>=0;i--){ const p=particles[i]; p.x+=p.vx; p.y+=p.vy; p.vy+=0.08; p.life--; ctx.beginPath(); ctx.fillStyle = `hsla(${p.hue},80%,60%, ${Math.max(0,p.life/80)})`; ctx.arc(p.x,p.y,p.size,0,Math.PI*2); ctx.fill(); if(p.life<=0) particles.splice(i,1); } requestAnimationFrame(step); } step();
 
-/* audio */
+/* audio: play click tone via WebAudio; background music via HTMLAudioElement (assets/audio/lofi1.wav) */
 const AudioContextClass = window.AudioContext || window.webkitAudioContext;
 const audioCtx = new AudioContextClass();
 let musicPlaying = false;
+
+// Background audio element (file path: assets/audio/lofi1.wav)
+const bgAudio = new Audio('assets/audio/lofi1.wav');
+bgAudio.loop = true;
+bgAudio.volume = 0.45; // default volume
+bgAudio.preload = 'auto';
+
+// Attempt to resume audio context if user gesture required
+async function resumeAudioContextIfNeeded(){
+  try{
+    if (audioCtx.state === 'suspended') await audioCtx.resume();
+  }catch(e){}
+}
+
 function playClickTone(){ try{ const o = audioCtx.createOscillator(); const g = audioCtx.createGain(); o.type='square'; o.frequency.value=1400; g.gain.value=0.06; o.connect(g); g.connect(audioCtx.destination); o.start(); g.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.12); o.frequency.exponentialRampToValueAtTime(220, audioCtx.currentTime + 0.12); setTimeout(()=>o.stop(),140); }catch(e){} }
-function startMusic(){ if(musicPlaying) return; if(audioCtx.state==='suspended') audioCtx.resume(); musicPlaying=true; const tempo=70; const period=60/tempo; let next=audioCtx.currentTime; (function schedule(){ const o=audioCtx.createOscillator(); const g=audioCtx.createGain(); o.type='sine'; o.frequency.setValueAtTime(80,next); g.gain.setValueAtTime(0.6,next); g.gain.exponentialRampToValueAtTime(0.0001,next+0.85); o.connect(g); g.connect(audioCtx.destination); o.start(next); o.stop(next+0.85); next += period; if(musicPlaying) setTimeout(schedule, period*1000); })(); }
-function stopMusic(){ musicPlaying=false; }
-musicToggle.addEventListener('click', ()=>{ if(!musicPlaying) startMusic(); else stopMusic(); musicToggle.textContent = musicPlaying ? '🔇':'🔊'; });
+
+async function startMusic(){
+  if (musicPlaying) return;
+  // ensure WebAudio context resumed (for click sounds)
+  await resumeAudioContextIfNeeded();
+  // try to play HTMLAudioElement; browsers often require a user gesture
+  bgAudio.play().then(()=> {
+    musicPlaying = true;
+    musicToggle.textContent = '🔇';
+  }).catch((err)=> {
+    // if play() fails due to autoplay policy, set flag but do not throw
+    console.warn('bgAudio.play() blocked by autoplay policy:', err);
+    // try a graceful fallback: set musicPlaying true only after user interacts
+    musicPlaying = false;
+    musicToggle.textContent = '🔊';
+  });
+}
+
+function stopMusic(){
+  try{
+    bgAudio.pause();
+    musicPlaying = false;
+    musicToggle.textContent = '🔊';
+  }catch(e){ console.warn(e); }
+}
+
+// wire music toggle - user gesture required on some browsers
+musicToggle.addEventListener('click', async ()=>{
+  // when toggling, resume context first to allow click tones
+  await resumeAudioContextIfNeeded();
+  if(!musicPlaying) {
+    await startMusic();
+  } else {
+    stopMusic();
+  }
+});
 
 /* animated background orbs */
 const bg = document.getElementById('bg-animated');
