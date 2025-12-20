@@ -1,0 +1,115 @@
+Privacybeleid – Tim Clicker
+
+Laatst bijgewerkt: 20-12-2025
+
+Tim Clicker respecteert jouw privacy. In dit privacybeleid leggen wij uit welke gegevens worden verzameld, waarom dit gebeurt en hoe deze gegevens worden gebruikt en beschermd.
+
+1. Welke gegevens verzamelen wij?
+
+Tim Clicker verzamelt alleen gegevens die nodig zijn om het spel goed te laten werken:
+
+a. Spelgegevens
+
+Spelernaam
+
+Aantal Tims
+
+CPS (Clicks Per Second)
+
+Gekochte upgrades
+
+Skins
+
+Dagelijkse beloningen
+
+Deze gegevens worden gebruikt om je voortgang op te slaan.
+
+b. Account- en technische gegevens
+
+Een automatisch gegenereerde gebruikers-ID (via Firebase)
+
+Basis technische informatie die Firebase nodig heeft om de dienst te leveren
+
+Wij verzamelen geen:
+
+Echte namen
+
+Adressen
+
+Telefoonnummers
+
+Betaalgegevens
+
+Privéberichten
+
+2. Waar worden gegevens opgeslagen?
+
+Spelgegevens worden opgeslagen in Google Firebase (Realtime Database / Firestore).
+
+Gegevens worden niet verkocht of gedeeld met derden.
+
+Lokale opslag (browser) wordt alleen gebruikt voor tijdelijke sessies of instellingen (zoals ingelogd blijven).
+
+3. Waarvoor gebruiken wij deze gegevens?
+
+De gegevens worden uitsluitend gebruikt voor:
+
+Het opslaan van spelvoortgang
+
+Het tonen van het leaderboard
+
+Het voorkomen van dataverlies
+
+Het verbeteren van de spelervaring
+
+4. Muziek en media
+
+De game kan muziek en geluiden afspelen (bijvoorbeeld lofi).
+Er worden geen luistergegevens of voorkeuren opgeslagen of gevolgd.
+
+5. Cookies
+
+Tim Clicker gebruikt geen trackingcookies.
+Alleen functionele opslag kan worden gebruikt om het spel te laten werken.
+
+6. Beveiliging
+
+Wij nemen redelijke maatregelen om gegevens te beschermen:
+
+Firebase beveiligingsregels
+
+Geen openbare schrijfrechten zonder authenticatie
+
+Geen gevoelige dataopslag
+
+Let op: geen enkel systeem is 100% veilig, maar wij doen ons best om misbruik te voorkomen.
+
+7. Minderjarigen
+
+Tim Clicker is een spel zonder expliciete inhoud.
+Wij verzamelen niet bewust persoonsgegevens van kinderen onder de 13 jaar.
+
+8. Jouw rechten
+
+Je hebt het recht om:
+
+Inzage te vragen in je gegevens
+
+Je gegevens te laten verwijderen
+
+Je account te resetten
+
+Dit kan door contact op te nemen met de site-eigenaar.
+
+9. Wijzigingen
+
+Dit privacybeleid kan in de toekomst worden aangepast.
+Bij grote wijzigingen zal dit duidelijk worden vermeld.
+
+10. Contact
+
+Voor vragen over privacy of gegevens:
+
+E-mail: timfinke01@gmail.com
+
+Project: Tim Clicker
