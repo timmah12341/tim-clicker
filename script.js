@@ -176,7 +176,7 @@ function renderOrbit(){
 }
 
 /* skins (left minimal) */
-const skins = [ {id:'cookie.png',name:'Default'},{id:'skin_tim.png',name:'Tim-ema'},{id:'skin_galaxy.png',name:'Galaxy'} ];
+const skins = [ {id:'cookie.png',name:'Default'},{id:'upgrade1.png',name:'Tim-ema'},{id:'upgrade0.png',name:'Galaxy'} ];
 function buildSkins(){ /* minimal for v2.1 - toggled via minigames for now */ }
 
 /* minigame click rush */
