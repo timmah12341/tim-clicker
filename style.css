@@ -52,3 +52,53 @@ button:active{transform:translateY(2px)}
 #bgParticles{position:fixed;left:0;top:0;pointer-events:none;z-index:5}
 .wide{width:100%;padding:10px;margin-bottom:8px}
 .inner{padding:12px}
+html, body {
+  margin: 0;
+  padding: 0;
+  background: #0e0f14;
+  color: #fff;
+  font-family: system-ui, sans-serif;
+  overflow-y: auto;
+}
+
+#app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.main {
+  flex: 1;
+  padding: 1rem;
+}
+
+.panel {
+  max-width: 420px;
+  margin: auto;
+}
+
+.hidden {
+  display: none;
+}
+
+img#timImg {
+  width: 180px;
+  max-width: 90vw;
+  cursor: pointer;
+}
+
+@media (max-width: 600px) {
+  .panel {
+    width: 100%;
+  }
+}
+#shopPanel {
+  max-height: 70vh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.shop-item {
+  display: flex;
+  gap: 12px;
+}
