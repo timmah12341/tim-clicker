@@ -1,0 +1,34 @@
+{
+  "rules": {
+    "users": {
+      "$uid": {
+        ".read": "auth != null && auth.uid == $uid",
+        ".write": "auth != null && auth.uid == $uid"
+      }
+    },
+    "presence": {
+      "$uid": {
+        ".read": "auth != null && auth.uid == $uid",
+        "$sessionId": {
+          ".write": "auth != null && auth.uid == $uid",
+          ".validate": "newData.hasChildren(['sessionId', 'startedAt', 'lastSeenAt', 'active']) && newData.child('sessionId').isString() && newData.child('sessionId').val() == $sessionId && newData.child('startedAt').isNumber() && newData.child('lastSeenAt').isNumber() && newData.child('active').isBoolean()"
+        }
+      }
+    },
+    "globalEvents": {
+      ".read": true,
+      ".write": "auth.token.email == 'timfinke01@gmail.com'"
+    },
+    "publicSessions": {
+      ".read": true,
+      ".write": true
+    },
+    "leaderboard": {
+      ".read": true,
+      "$uid": {
+        ".write": "auth != null && auth.uid == $uid",
+        ".validate": "newData.hasChildren(['name', 'tims', 'rebirths', 'highestMulti', 'updatedAt']) && newData.child('name').isString() && newData.child('name').val().length <= 40 && newData.child('tims').isNumber() && newData.child('rebirths').isNumber() && newData.child('highestMulti').isNumber() && newData.child('updatedAt').isNumber()"
+      }
+    }
+  }
+}
