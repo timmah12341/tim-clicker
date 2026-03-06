@@ -522,7 +522,8 @@
   }
   var MUSIC = {
     lofi1: { name: 'Bossa Nova', cost: 1200, file: 'assets/music/lofi1.wav' },
-    lofi2: { name: 'Tetration (BFDI/TPOT medley)', cost: 2500, file: 'assets/music/lofi2.mp3' }
+    lofi2: { name: 'Tetration (BFDI/TPOT medley)', cost: 2500, file: 'assets/music/lofi2.mp3' },
+    lofi3: { name: 'Rat Quest', cost: 5000, file: 'assets/music/lofi3.mp3' }
   };
 
   var BACKGROUNDS = {
