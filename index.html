@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4163953497019376"
+     crossorigin="anonymous"></script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Tim Clicker :3</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="cookie.png">
+</head>
+<body>
+  <main class="container">
+    <section id="namePanel" class="card hidden">
+      <h1>Tim Clicker</h1>
+      <p>Enter your ingame name to start.</p>
+      <input id="nameInput" placeholder="Your name">
+      <button id="saveNameBtn">Start</button>
+      <p id="firebaseStatus" class="status"></p>
+    </section>
+
+    <section id="authPanel" class="card">
+      <h2>Login</h2>
+      <p>Login after cookie consent to sync progress and unlock account battle pass rewards.</p>
+      <input id="emailLoginInput" type="email" placeholder="Email">
+      <input id="passwordLoginInput" type="password" placeholder="Password">
+      <div class="grid">
+        <button id="emailLoginBtn">Login</button>
+        <button id="emailSignupBtn">Sign Up</button>
+        <button id="resetPasswordBtn">Reset Password</button>
+      </div>
+      <button id="guestLoginBtn">Continue as Guest</button>
+      <p id="authStatus" class="status"></p>
+      <p id="presenceStatus" class="status"></p>
+    </section>
+
+    <section id="gamePanel" class="hidden">
+      <header class="card stats">
+        <div><span>Player</span><b id="playerName">-</b></div>
+        <div class="compact-stat"><span>Tims</span><b id="tims">0</b></div>
+        <div class="compact-stat"><span>CPS</span><b id="cps">0</b></div>
+        <div><span>Multi</span><b id="multi">x1.00</b></div>
+        <div><span>Rebirths</span><b id="rebirths">0</b></div>
+        <div id="renamePanel" class="rename-controls">
+          <input id="renameInput" placeholder="New ingame name">
+          <button id="renameBtn">Change name</button>
+        </div>
+      </header>
+
+      <section class="card click-area">
+        <img id="timImage" src="assets/skins/default.png" alt="Tim">
+        <button id="rebirthBtn">Rebirth</button>
+      </section>
+
+      <section class="card">
+        <h2>Upgrades</h2>
+        <div id="upgradeShop" class="grid"></div>
+      </section>
+
+      <section class="card">
+        <h2>Skins</h2>
+        <div id="skinShop" class="grid"></div>
+      </section>
+
+      <section class="card">
+        <h2>Free Battle Pass</h2>
+        <p id="battlePassSummary" class="status"></p>
+        <div class="bp-progress-wrap"><div id="battlePassProgress" class="bp-progress"></div></div>
+        <div id="battlePassRewards" class="grid"></div>
+        <h3>Quests</h3>
+        <div id="questList" class="grid"></div>
+      </section>
+
+      <section class="card">
+        <h2>Music (buyable)</h2>
+        <div id="musicShop" class="grid"></div>
+      </section>
+
+      <section class="card">
+        <h2>Backgrounds (buyable)</h2>
+        <div id="backgroundShop" class="grid"></div>
+      </section>
+
+      <section class="card">
+        <h2>Minigames</h2>
+        <div id="minigameShop" class="grid"></div>
+        <p id="miniResult"></p>
+      </section>
+
+      <section class="card">
+        <h2>Leaderboard</h2>
+        <div class="leaderboard-tabs">
+          <button id="leaderboardTabTims" class="leaderboard-tab active" data-board="tims">Tims</button>
+          <button id="leaderboardTabRebirths" class="leaderboard-tab" data-board="rebirths">Rebirths</button>
+          <button id="leaderboardTabHighestMulti" class="leaderboard-tab" data-board="highestMulti">Highest Multi</button>
+        </div>
+        <p id="leaderboardStatus" class="status"></p>
+        <ol id="leaderboardList" class="leaderboard-list"></ol>
+      </section>
+
+      <section class="card">
+        <h2>Fake Crypto</h2>
+        <div class="inline">
+          <label for="coinSelect">Coin:</label>
+          <select id="coinSelect"></select>
+          <span>Price: <b id="coinPrice">0</b></span>
+          <span>Wallet: <b id="coinWallet">0</b></span>
+        </div>
+        <div class="grid">
+          <button id="buyCoinBtn">Buy 1 coin</button>
+          <button id="sellCoinBtn">Sell 1 coin</button>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Credits</h2>
+        <a href="https://github.com/timmah12341/tim-clicker/graphs/contributors">
+          <img class="credits-contrib" src="https://contrib.rocks/image?repo=timmah12341/tim-clicker" alt="Contributors">
+        </a>
+        <p>Made with <a href="https://contrib.rocks" target="_blank" rel="noopener noreferrer">contrib.rocks</a>.</p>
+        <p><a href="https://github.com/timmah12341/tim-clicker/issues" target="_blank" rel="noopener noreferrer">Report bugs on GitHub Issues</a></p>
+        <p>Extra credits to the Alpha Tester Team and Alexander for all the skin designs.</p>
+      </section>
+    </section>
+  </main>
+  <button id="logoutBtn" class="danger top-logout hidden">Logout</button>
+  <div id="cookiePopup" class="cookie-popup">
+    <div class="cookie-card">
+      <h3>Cookie & Save Permission</h3>
+      <p>This game uses local storage for consent only. Guest progress is saved in Firebase by your UID.</p>
+      <p>If you decline, nothing will save. It is a risk you are willing to take.</p>
+      <div class="cookie-actions">
+        <button id="acceptCookiesBtn">Accept</button>
+        <button id="declineCookiesBtn" class="danger">Decline</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="presencePopup" class="presence-popup hidden" aria-live="polite">
+    <div class="presence-card">
+      <h3>Another device is currently playing on this account</h3>
+      <p>Your progress may jump around if multiple sessions stay active at the same time.</p>
+    </div>
+  </div>
+
+  <div id="resetPopup" class="reset-popup hidden" role="dialog" aria-modal="true" aria-labelledby="resetPopupTitle">
+    <div class="reset-card">
+      <h3 id="resetPopupTitle">Reset password</h3>
+      <p>Enter your account email and we will send a Firebase reset link.</p>
+      <input id="resetEmailInput" type="email" placeholder="Email">
+      <p id="resetStatus" class="status"></p>
+      <div class="reset-actions">
+        <button id="sendResetEmailBtn">Send reset email</button>
+        <button id="closeResetPopupBtn" class="danger">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="namePopup" class="reset-popup hidden" role="dialog" aria-modal="true" aria-labelledby="namePopupTitle">
+    <div class="reset-card">
+      <h3 id="namePopupTitle">Choose your ingame name</h3>
+      <p>Pick a name before you start playing.</p>
+      <input id="popupNameInput" placeholder="Your name">
+      <div class="reset-actions one-col">
+        <button id="savePopupNameBtn">Save name</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="confirmResetPopup" class="reset-popup hidden" role="dialog" aria-modal="true" aria-labelledby="confirmResetTitle">
+    <div class="reset-card">
+      <h3 id="confirmResetTitle">Choose a new password</h3>
+      <p>Enter a new password for your account.</p>
+      <input id="newPasswordInput" type="password" placeholder="New password (min. 6 chars)">
+      <p id="confirmResetStatus" class="status"></p>
+      <div class="reset-actions one-col">
+        <button id="confirmResetBtn">Save new password</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="skinLoadingOverlay" class="loading-overlay" aria-live="polite">
+    <div class="loading-card">
+      <img src="assets/skins/default.png" alt="Loading Tim" class="loading-tim">
+      <p>Loading...</p>
+    </div>
+  </div>
+
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+  <script src="script.js?v=20260303c"></script>
+</body>
+</html>
